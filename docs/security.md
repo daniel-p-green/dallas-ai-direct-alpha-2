@@ -52,6 +52,26 @@ minimization as primary controls.
 | Denial of Service | Signup flood during talk | Rate limits + fallback flow | Load tests |
 | Elevation of Privilege | Non-admin reads base table | No public select policy on `attendees` | RLS policy tests |
 
+## Control-to-evidence matrix
+
+| Control | Verification artifact | Expected result |
+| --- | --- | --- |
+| Base table read blocked for public roles | `ops/preflight.md` step 1, `docs/runtime-validation.md` | Access blocked |
+| Public projection excludes email | `ops/preflight.md` step 3, `tests/privacy-leak-tests.md` | No `email` field |
+| Duplicate email blocked | `ops/preflight.md` step 4, DB unique index | Second insert fails |
+| Comfort level range enforced | `ops/preflight.md` step 5, DB check constraint | Out-of-range insert fails |
+| Mobile-safe privacy rendering | `tests/ui-mobile-audit.md`, `tests/ui-mobile-audit.spec.ts` | No email exposure on mobile |
+
+## Residual risk accepted for alpha
+
+- Anonymous insert path can still attract burst abuse despite layered controls.
+- Polling refresh can lag under venue network instability.
+- Demo posture favors reliability and safety over full enterprise auth maturity.
+
+## No-go threshold
+
+Fail any privacy boundary check and treat the run as automatic no-go.
+
 ## Skills used
 
 - Scanned `~/.openclaw/skills` and found `antfarm-workflows/SKILL.md`.
