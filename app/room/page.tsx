@@ -1,5 +1,6 @@
 "use client";
 
+import { Linkedin } from '@geist-ui/icons';
 import { useEffect, useMemo, useState } from 'react';
 
 type Attendee = {
@@ -31,16 +32,6 @@ const seed: Attendee[] = [
   }
 ];
 
-function LinkedInIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M6 9v9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      <circle cx="6" cy="6" r="1.4" fill="currentColor" />
-      <path d="M11 18v-5.2c0-1.4 1.1-2.5 2.5-2.5S16 11.4 16 12.8V18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  );
-}
-
 function ComfortDots({ level }: { level: number }) {
   return (
     <span className="comfort" aria-label={`Comfort level ${level}`}>
@@ -53,10 +44,10 @@ function ComfortDots({ level }: { level: number }) {
 }
 
 export default function RoomPage() {
-  const [now, setNow] = useState(Date.now());
+  const [lastPollAt, setLastPollAt] = useState(Date.now());
 
   useEffect(() => {
-    const timer = setInterval(() => setNow(Date.now()), 5000);
+    const timer = setInterval(() => setLastPollAt(Date.now()), 5000);
     return () => clearInterval(timer);
   }, []);
 
@@ -65,7 +56,7 @@ export default function RoomPage() {
     []
   );
 
-  const updatedAgo = Math.max(1, Math.floor((Date.now() - now) / 1000));
+  const updatedAgo = Math.max(1, Math.floor((Date.now() - lastPollAt) / 1000));
   const avgComfort = (attendees.reduce((n, a) => n + a.ai_comfort_level, 0) / attendees.length).toFixed(1);
   const highPct = Math.round((attendees.filter((a) => a.ai_comfort_level >= 4).length / attendees.length) * 100);
 
@@ -105,8 +96,14 @@ export default function RoomPage() {
               </div>
               <ComfortDots level={a.ai_comfort_level} />
               <span className="muted">{a.help_offered.join(', ')}</span>
-              <a className="iconButton" href={a.linkedin_url || '#'} target="_blank" rel="noreferrer" aria-label="Open LinkedIn profile">
-                <LinkedInIcon />
+              <a
+                className="iconButton"
+                href={a.linkedin_url || '#'}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Open LinkedIn profile"
+              >
+                <Linkedin size={15} />
               </a>
             </article>
           );
