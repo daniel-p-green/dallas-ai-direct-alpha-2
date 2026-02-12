@@ -77,3 +77,12 @@ This repository uses environment skills as the canonical extension mechanism.
 - `tests/` markdown test plans
 - `ops/` checklists and incident response
 
+
+
+## Design System
+
+- `docs/brand-guidelines.md`
+- `docs/ui-patterns.md`
+- `docs/assets.md`
+
+Privacy baseline: email never appears on any public UI surface.
