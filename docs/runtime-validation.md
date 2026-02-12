@@ -1,0 +1,43 @@
+# Runtime validation
+
+## Goal
+
+Prove the live demo does not expose sensitive data and that the room board
+updates reliably.
+
+## 15-minute checklist
+
+1. Confirm environment banner shows intended environment.
+2. Run `ops/preflight.md` checks.
+3. Confirm UI queries `attendees_public` only.
+4. Submit one signup via QR flow.
+5. Confirm room board updates within 5 seconds.
+6. Confirm UI and payloads never expose email.
+
+## Expected outputs
+
+- Base table reads block for anon and non-admin contexts.
+- `attendees_public` returns only safe fields.
+- `email` column does not exist in public view.
+- Duplicate email insert fails.
+- Out-of-range comfort level fails.
+- Injected HTML renders escaped text only.
+
+## Mobile QR sanity
+
+Run `tests/ui-mobile-audit.md` on iPhone Safari and Android Chrome.
+Confirm QR entry, form usability at 375px width, consent default state,
+room-board privacy badge visibility, newest-first behavior, and no public email.
+
+## Failure response
+
+- Switch to seeded dataset mode.
+- Keep public board on safe projection.
+- Present `docs/rls-policies.md` and `docs/privacy-and-consent.md`.
+- State mitigation and next remediation step.
+
+## Skills used
+
+- Source: `~/.openclaw/skills`
+- Applied: `webapp-testing`, `verification-before-completion`
+- Notes: Used for runtime check structure and release gate clarity.
