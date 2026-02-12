@@ -25,6 +25,7 @@ npm run typecheck
 npm run build
 npm test
 bash tests/validate-brand-guidelines.sh
+bash tests/validate-mobile-audit-runtime-links.sh
 ```
 
 ## Execution Order
