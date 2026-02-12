@@ -11,6 +11,7 @@
 | `linkedin_url` | `text` | optional |
 | `title` | `text` | optional |
 | `company` | `text` | optional |
+| `display_title_company` | `boolean` | optional, default `false` (consent flag) |
 | `ai_comfort_level` | `int` | required, range `1..5` |
 | `help_needed` | `text[]` | required, multi-select |
 | `help_offered` | `text[]` | required, multi-select |

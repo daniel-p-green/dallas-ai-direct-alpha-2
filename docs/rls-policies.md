@@ -13,6 +13,7 @@ create table if not exists public.attendees (
   linkedin_url text,
   title text,
   company text,
+  display_title_company boolean not null default false,
   ai_comfort_level int not null check (ai_comfort_level between 1 and 5),
   help_needed text[] not null default '{}' check (cardinality(help_needed) <= 20),
   help_offered text[] not null default '{}' check (cardinality(help_offered) <= 20),
@@ -33,8 +34,8 @@ select
   created_at,
   name,
   linkedin_url,
-  title,
-  company,
+  case when display_title_company then title else null end as title,
+  case when display_title_company then company else null end as company,
   ai_comfort_level,
   help_offered
 from public.attendees;

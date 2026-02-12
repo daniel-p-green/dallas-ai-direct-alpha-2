@@ -17,13 +17,19 @@ Display a persistent top banner:
 Show only these fields:
 
 - `name`
-- `title` (if provided)
-- `company` (if provided)
+- `title` (if provided and consented)
+- `company` (if provided and consented)
 - `ai_comfort_level`
 - `help_offered`
 - `linkedin_url`
 
 Never show `email`.
+
+Signup consent control:
+
+- Checkbox label: `Display my title and company on the public room board.`
+- Default state: unchecked
+- Helper text: `Email stays private and never appears on the public board.`
 
 ## T-30 minutes checklist
 

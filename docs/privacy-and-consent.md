@@ -22,8 +22,8 @@
 | Data field | Public room view (`attendees_public`) | Internal table (`attendees`) |
 | --- | --- | --- |
 | `name` | Yes | Yes |
-| `title` | Yes, if provided | Yes |
-| `company` | Yes, if provided | Yes |
+| `title` | Yes, if provided and consented | Yes |
+| `company` | Yes, if provided and consented | Yes |
 | `linkedin_url` | Yes | Yes |
 | `email` | No | Yes |
 | `ai_comfort_level` | Yes | Yes |
