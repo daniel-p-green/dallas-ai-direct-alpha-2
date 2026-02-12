@@ -87,6 +87,39 @@ using (
 );
 ```
 
+## Staff moderation role setup (Dallas AI staff)
+
+Use JWT app metadata roles for staff moderation controls.
+
+```sql
+-- Role claim convention:
+-- auth.jwt() ->> 'role' in ('staff', 'admin')
+
+create policy attendees_update_staff_only
+on public.attendees
+for update
+to authenticated
+using (
+  auth.jwt() ->> 'role' in ('staff', 'admin')
+)
+with check (
+  auth.jwt() ->> 'role' in ('staff', 'admin')
+);
+
+create policy attendees_delete_admin_only
+on public.attendees
+for delete
+to authenticated
+using (
+  auth.jwt() ->> 'role' = 'admin'
+);
+```
+
+Operational guidance:
+- Grant staff/admin roles only through trusted backend workflows.
+- Keep moderation actions in server-side paths.
+- Audit role assignment changes and moderation actions.
+
 ## View grants and table revocation
 
 ```sql

@@ -135,6 +135,11 @@ References:
 - `ops/preflight.md`
 - `tests/ui-mobile-audit.md`
 
+If documentation conflicts, prioritize:
+1. `docs/rls-policies.md`
+2. `docs/runtime-validation.md`
+3. `docs/PRD.md`
+
 ---
 
 ## Why this is not just a directory
