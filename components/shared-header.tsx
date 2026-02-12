@@ -28,13 +28,21 @@ export function SharedHeader() {
           <span className="sr-only">Dallas AI Direct</span>
         </Link>
 
-        <div className="flex items-center gap-1" role="list">
+        <div className="flex items-center gap-1.5">
           <NavLink href="/signup" active={pathname === "/signup"}>
-            Join
+            Sign Up
           </NavLink>
           <NavLink href="/room" active={pathname === "/room"}>
             Directory
           </NavLink>
+          <a
+            href="https://dallas-ai.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="focus-ring ml-1 inline-flex h-8 items-center justify-center rounded-full bg-foreground px-4 text-xs font-semibold text-background transition-opacity hover:opacity-80 active:scale-[0.97]"
+          >
+            Join Dallas AI
+          </a>
         </div>
       </nav>
     </header>

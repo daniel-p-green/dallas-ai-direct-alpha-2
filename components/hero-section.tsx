@@ -25,16 +25,16 @@ export function HeroSection() {
         The live directory for Dallas AI events. Share what you are working on, find the right people, and turn every meetup into your next opportunity.
       </p>
 
-      <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+      <div className="mt-10 flex w-full max-w-xs flex-col gap-3 sm:max-w-none sm:flex-row sm:justify-center">
         <Link
           href="/signup"
-          className="focus-ring inline-flex h-12 items-center justify-center rounded-full bg-primary px-8 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:shadow-xl hover:shadow-primary/30 hover:brightness-110 active:scale-[0.98]"
+          className="focus-ring inline-flex h-11 items-center justify-center rounded-full bg-primary px-6 text-[13px] font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:shadow-xl hover:shadow-primary/30 hover:brightness-110 active:scale-[0.98]"
         >
           Join the Event
         </Link>
         <Link
           href="/room"
-          className="focus-ring inline-flex h-12 items-center justify-center rounded-full border border-border px-8 text-sm font-semibold transition-colors hover:bg-secondary active:scale-[0.98]"
+          className="focus-ring inline-flex h-11 items-center justify-center rounded-full border border-border px-6 text-[13px] font-semibold transition-colors hover:bg-secondary active:scale-[0.98]"
         >
           Browse the Room
         </Link>
