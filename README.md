@@ -73,7 +73,7 @@ This repository uses environment skills as the canonical extension mechanism.
 
 ## Repo Structure
 
-- `docs/` product, security, architecture, roadmap, runbook
+- `docs/` product, security, privacy/consent, architecture, roadmap, runbook
 - `tests/` markdown test plans
 - `ops/` checklists and incident response
 
