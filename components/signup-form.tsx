@@ -112,83 +112,46 @@ export function SignupForm() {
     }
   }
 
-  const inputClasses =
-    "w-full min-h-[44px] rounded-[var(--radius)] border border-input bg-card px-3 py-2.5 text-sm text-card-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 focus:ring-offset-background"
+  const inputBase =
+    "w-full h-9 rounded-md border border-input bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring transition-colors"
 
-  const selectClasses =
-    "w-full min-h-[44px] rounded-[var(--radius)] border border-input bg-card px-3 py-2.5 text-sm text-card-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 focus:ring-offset-background"
+  const selectBase =
+    "w-full h-9 rounded-md border border-input bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-ring transition-colors"
 
   return (
-    <div className="rounded-xl border border-border bg-card p-6 md:p-8">
-      <div className="mb-6">
-        <h2 className="text-balance text-2xl font-bold tracking-tight md:text-3xl">
-          Attendee Signup
-        </h2>
-        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          Complete this form to appear on the room board with public-safe
-          fields.
+    <div className="mx-auto max-w-xl">
+      <div className="mb-8">
+        <h1 className="text-2xl font-semibold tracking-tight">Join the room</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Fill in your details to appear on the public board. Email is required but never displayed.
         </p>
       </div>
 
-      <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
-        {/* Honeypot field */}
+      <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+        {/* Honeypot */}
         <div aria-hidden="true" className="absolute -left-[9999px]">
           <label htmlFor="website">Website</label>
-          <input
-            id="website"
-            name="honeypot"
-            type="text"
-            tabIndex={-1}
-            autoComplete="off"
-          />
+          <input id="website" name="honeypot" type="text" tabIndex={-1} autoComplete="off" />
         </div>
 
         {/* Name + Email */}
-        <div className="grid gap-5 md:grid-cols-2">
-          <div className="flex flex-col gap-2">
-            <label htmlFor="name" className="text-sm font-medium">
-              Name
-            </label>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              placeholder="Your name"
-              required
-              className={inputClasses}
-            />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="name" className="text-sm font-medium">Name</label>
+            <input id="name" name="name" type="text" placeholder="Your name" required className={inputBase} />
           </div>
-          <div className="flex flex-col gap-2">
-            <label htmlFor="email" className="text-sm font-medium">
-              Email
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="you@company.com"
-              required
-              className={inputClasses}
-            />
-            <p className="text-xs text-muted-foreground">
-              Email stays private and is never displayed publicly.
-            </p>
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="email" className="text-sm font-medium">Email</label>
+            <input id="email" name="email" type="email" placeholder="you@company.com" required className={inputBase} />
+            <p className="text-[11px] text-muted-foreground">Never displayed publicly.</p>
           </div>
         </div>
 
         {/* Comfort + LinkedIn */}
-        <div className="grid gap-5 md:grid-cols-2">
-          <div className="flex flex-col gap-2">
-            <label htmlFor="comfort" className="text-sm font-medium">
-              AI Comfort Level (1-5)
-            </label>
-            <select
-              id="comfort"
-              name="ai_comfort_level"
-              defaultValue="3"
-              required
-              className={selectClasses}
-            >
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="comfort" className="text-sm font-medium">AI Comfort Level</label>
+            <select id="comfort" name="ai_comfort_level" defaultValue="3" required className={selectBase}>
               <option value="1">1 -- Just starting</option>
               <option value="2">2 -- Exploring</option>
               <option value="3">3 -- Building</option>
@@ -196,62 +159,35 @@ export function SignupForm() {
               <option value="5">5 -- Leading</option>
             </select>
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1.5">
             <label htmlFor="linkedin" className="text-sm font-medium">
-              LinkedIn URL{" "}
-              <span className="font-normal text-muted-foreground">
-                (optional)
-              </span>
+              LinkedIn <span className="font-normal text-muted-foreground">(optional)</span>
             </label>
-            <input
-              id="linkedin"
-              name="linkedin_url"
-              type="url"
-              placeholder="https://linkedin.com/in/..."
-              className={inputClasses}
-            />
+            <input id="linkedin" name="linkedin_url" type="url" placeholder="https://linkedin.com/in/..." className={inputBase} />
           </div>
         </div>
+
+        <div className="h-px bg-border" />
 
         {/* Help needed + Help offered */}
-        <div className="grid gap-5 md:grid-cols-2">
-          <fieldset className="flex flex-col gap-3">
-            <legend className="text-sm font-medium">
-              What help do you need?
-            </legend>
+        <div className="grid gap-6 sm:grid-cols-2">
+          <fieldset className="flex flex-col gap-2.5">
+            <legend className="text-sm font-medium">What help do you need?</legend>
             <div className="flex flex-col gap-2">
               {HELP_OPTIONS.map((opt) => (
-                <label
-                  key={opt}
-                  className="flex items-center gap-2 text-sm text-card-foreground"
-                >
-                  <input
-                    type="checkbox"
-                    name="help_needed"
-                    value={opt}
-                    className="h-4 w-4 rounded border-input accent-primary"
-                  />
+                <label key={opt} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+                  <input type="checkbox" name="help_needed" value={opt} className="h-3.5 w-3.5 rounded border-input accent-foreground" />
                   {opt}
                 </label>
               ))}
             </div>
           </fieldset>
-          <fieldset className="flex flex-col gap-3">
-            <legend className="text-sm font-medium">
-              What help can you offer?
-            </legend>
+          <fieldset className="flex flex-col gap-2.5">
+            <legend className="text-sm font-medium">What help can you offer?</legend>
             <div className="flex flex-col gap-2">
               {HELP_OPTIONS.map((opt) => (
-                <label
-                  key={opt}
-                  className="flex items-center gap-2 text-sm text-card-foreground"
-                >
-                  <input
-                    type="checkbox"
-                    name="help_offered"
-                    value={opt}
-                    className="h-4 w-4 rounded border-input accent-primary"
-                  />
+                <label key={opt} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+                  <input type="checkbox" name="help_offered" value={opt} className="h-3.5 w-3.5 rounded border-input accent-foreground" />
                   {opt}
                 </label>
               ))}
@@ -259,84 +195,60 @@ export function SignupForm() {
           </fieldset>
         </div>
 
+        <div className="h-px bg-border" />
+
         {/* Title + Company */}
-        <div className="grid gap-5 md:grid-cols-2">
-          <div className="flex flex-col gap-2">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="flex flex-col gap-1.5">
             <label htmlFor="title" className="text-sm font-medium">
-              Title{" "}
-              <span className="font-normal text-muted-foreground">
-                (optional)
-              </span>
+              Title <span className="font-normal text-muted-foreground">(optional)</span>
             </label>
-            <input
-              id="title"
-              name="title"
-              type="text"
-              placeholder="Your job title"
-              className={inputClasses}
-            />
+            <input id="title" name="title" type="text" placeholder="Your job title" className={inputBase} />
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1.5">
             <label htmlFor="company" className="text-sm font-medium">
-              Company{" "}
-              <span className="font-normal text-muted-foreground">
-                (optional)
-              </span>
+              Company <span className="font-normal text-muted-foreground">(optional)</span>
             </label>
-            <input
-              id="company"
-              name="company"
-              type="text"
-              placeholder="Your company"
-              className={inputClasses}
-            />
+            <input id="company" name="company" type="text" placeholder="Your company" className={inputBase} />
           </div>
         </div>
 
         {/* Display consent */}
-        <label className="flex items-start gap-3 text-sm">
-          <input
-            id="displayTitleCompany"
-            name="display_title_company"
-            type="checkbox"
-            defaultChecked={false}
-            className="mt-0.5 h-4 w-4 rounded border-input accent-primary"
-          />
-          <span className="text-card-foreground">
-            Display my title and company on the public room board.
-          </span>
+        <label className="flex items-center gap-2.5 text-sm cursor-pointer">
+          <input id="displayTitleCompany" name="display_title_company" type="checkbox" defaultChecked={false} className="h-3.5 w-3.5 rounded border-input accent-foreground" />
+          <span className="text-muted-foreground">Display my title and company on the public board</span>
         </label>
 
         {/* Status message */}
         {status.type !== "idle" && (
-          <p
+          <div
             role={status.type === "error" ? "alert" : "status"}
-            className={`text-sm font-medium ${
+            className={`rounded-md border px-3 py-2 text-sm ${
               status.type === "error"
-                ? "text-destructive"
+                ? "border-destructive/50 bg-destructive/10 text-destructive"
                 : status.type === "success"
-                  ? "text-[hsl(var(--success))]"
-                  : "text-muted-foreground"
+                  ? "border-[hsl(var(--success))]/50 bg-[hsl(var(--success))]/10 text-[hsl(var(--success))]"
+                  : "border-border bg-muted text-muted-foreground"
             }`}
           >
             {status.type === "submitting" ? "Submitting..." : status.message}
-          </p>
+          </div>
         )}
 
         {/* Actions */}
-        <div className="flex flex-col gap-3 pt-2 sm:flex-row">
+        <div className="flex items-center gap-3 pt-1">
           <button
             type="submit"
             disabled={status.type === "submitting"}
-            className="inline-flex min-h-[44px] items-center justify-center rounded-[var(--radius)] bg-primary px-6 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
+            className="inline-flex h-9 items-center justify-center rounded-md bg-foreground px-4 text-sm font-medium text-background transition-opacity hover:opacity-80 disabled:opacity-50"
           >
-            {status.type === "submitting" ? "Submitting..." : "Submit Signup"}
+            {status.type === "submitting" ? "Submitting..." : "Submit"}
           </button>
           <Link
             href="/room"
-            className="inline-flex min-h-[44px] items-center justify-center rounded-[var(--radius)] border border-border bg-card px-6 text-sm font-semibold text-card-foreground transition-colors hover:bg-accent"
+            className="inline-flex h-9 items-center justify-center rounded-md border border-border px-4 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
           >
-            View the Room
+            View Board
           </Link>
         </div>
       </form>

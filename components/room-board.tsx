@@ -10,19 +10,36 @@ import { MetricsStrip } from "@/components/metrics-strip"
 
 const SEED_ATTENDEES: Attendee[] = [
   {
-    name: "Attendee One",
-    title: "Engineering Lead",
-    company: "Community Co",
+    name: "Jordan Chen",
+    title: "ML Engineer",
+    company: "Vertex Labs",
     linkedin_url: "https://linkedin.com",
     ai_comfort_level: 4,
-    help_offered: ["Mentoring"],
-    created_at: new Date(Date.now() - 10_000).toISOString(),
+    help_offered: ["Mentoring", "Hiring"],
+    created_at: new Date(Date.now() - 120_000).toISOString(),
   },
   {
-    name: "Attendee Two",
+    name: "Priya Sharma",
+    title: "Product Lead",
+    company: "Nexus AI",
     linkedin_url: "https://linkedin.com",
-    ai_comfort_level: 3,
-    help_offered: ["Hiring"],
+    ai_comfort_level: 5,
+    help_offered: ["Partnering"],
+    created_at: new Date(Date.now() - 60_000).toISOString(),
+  },
+  {
+    name: "Marcus Rivera",
+    linkedin_url: "https://linkedin.com",
+    ai_comfort_level: 2,
+    help_offered: ["Learning"],
+    created_at: new Date(Date.now() - 30_000).toISOString(),
+  },
+  {
+    name: "Sarah Kim",
+    title: "CTO",
+    company: "DataFlow",
+    ai_comfort_level: 5,
+    help_offered: ["Investing", "Mentoring"],
     created_at: new Date(Date.now() - 3_000).toISOString(),
   },
 ]
@@ -42,7 +59,6 @@ export function RoomBoard() {
     hasSupabaseBrowserEnv() ? "live" : "fallback"
   )
   const [loadMessage, setLoadMessage] = useState<string | null>(null)
-  const [lastPollAt, setLastPollAt] = useState(Date.now())
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -53,10 +69,9 @@ export function RoomBoard() {
         if (active) {
           setDataMode("fallback")
           setLoadMessage(
-            "Showing demo seed data. Configure public Supabase variables for live room data."
+            "Showing seed data. Connect Supabase for live attendees."
           )
           setAttendees(fallback)
-          setLastPollAt(Date.now())
         }
         return
       }
@@ -74,11 +89,8 @@ export function RoomBoard() {
         if (error) {
           if (active) {
             setDataMode("fallback")
-            setLoadMessage(
-              "Live room data is unavailable. Showing demo seed data."
-            )
+            setLoadMessage("Live data unavailable. Showing seed data.")
             setAttendees(fallback)
-            setLastPollAt(Date.now())
           }
           return
         }
@@ -91,17 +103,11 @@ export function RoomBoard() {
           title: typeof row.title === "string" ? row.title : undefined,
           company: typeof row.company === "string" ? row.company : undefined,
           linkedin_url:
-            typeof row.linkedin_url === "string"
-              ? row.linkedin_url
-              : undefined,
+            typeof row.linkedin_url === "string" ? row.linkedin_url : undefined,
           ai_comfort_level:
-            typeof row.ai_comfort_level === "number"
-              ? row.ai_comfort_level
-              : 1,
+            typeof row.ai_comfort_level === "number" ? row.ai_comfort_level : 1,
           help_offered: Array.isArray(row.help_offered)
-            ? row.help_offered.filter(
-                (v): v is string => typeof v === "string"
-              )
+            ? row.help_offered.filter((v): v is string => typeof v === "string")
             : [],
           created_at:
             typeof row.created_at === "string"
@@ -113,16 +119,12 @@ export function RoomBoard() {
           setDataMode("live")
           setLoadMessage(null)
           setAttendees(mapped)
-          setLastPollAt(Date.now())
         }
       } catch {
         if (active) {
           setDataMode("fallback")
-          setLoadMessage(
-            "Live room data is unavailable. Showing demo seed data."
-          )
+          setLoadMessage("Live data unavailable. Showing seed data.")
           setAttendees(fallback)
-          setLastPollAt(Date.now())
         }
       }
     }
@@ -136,47 +138,41 @@ export function RoomBoard() {
     }
   }, [fallback])
 
-  const elapsed = Math.max(1, Math.floor((Date.now() - lastPollAt) / 1000))
-
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-6">
       {/* Header */}
-      <div className="flex flex-wrap items-start justify-between gap-3">
+      <div className="flex items-start justify-between">
         <div>
-          <h2 className="text-balance text-2xl font-bold tracking-tight md:text-3xl">
-            Who is in the room?
-          </h2>
-          <div className="mt-2 flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center rounded-full border border-border bg-card px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
-              Public view -- emails excluded
+          <h1 className="text-2xl font-semibold tracking-tight">Room Board</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {mounted ? `${attendees.length} attendee${attendees.length !== 1 ? "s" : ""}` : "Loading..."}{" "}
+            <span className="font-mono text-[11px]">
+              {dataMode === "live" ? "LIVE" : "SEED"}
             </span>
-            <span className="text-xs text-muted-foreground">
-              Data:{" "}
-              {dataMode === "live"
-                ? "Live attendees_public feed"
-                : "Fallback demo seed"}
-            </span>
-          </div>
+          </p>
         </div>
-        <span className="mt-1 text-xs text-muted-foreground">
-          Updated {mounted ? `${elapsed}s ago` : "..."}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className={`inline-block h-1.5 w-1.5 rounded-full ${dataMode === "live" ? "bg-[hsl(var(--success))]" : "bg-muted-foreground"}`} />
+          <span className="font-mono text-[11px] text-muted-foreground">
+            {dataMode === "live" ? "attendees_public" : "seed_data"}
+          </span>
+        </div>
       </div>
 
       {/* Load message */}
       {loadMessage && (
-        <p className="text-sm text-muted-foreground">{loadMessage}</p>
+        <div className="rounded-md border border-border bg-secondary px-3 py-2 text-xs text-muted-foreground">
+          {loadMessage}
+        </div>
       )}
 
       {/* Metrics */}
       <MetricsStrip attendees={attendees} />
 
       {/* Attendee list */}
-      <div className="flex flex-col gap-2">
+      <div className="rounded-lg border border-border bg-card px-4">
         {attendees.map((a) => {
-          const isNew =
-            mounted &&
-            Date.now() - new Date(a.created_at).getTime() <= 5000
+          const isNew = mounted && Date.now() - new Date(a.created_at).getTime() <= 5000
           return (
             <AttendeeCard
               key={`${a.name}-${a.created_at}`}
@@ -186,7 +182,7 @@ export function RoomBoard() {
           )
         })}
         {attendees.length === 0 && (
-          <p className="py-8 text-center text-sm text-muted-foreground">
+          <p className="py-12 text-center text-sm text-muted-foreground">
             No attendees yet. Be the first to sign up.
           </p>
         )}
