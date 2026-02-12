@@ -13,13 +13,16 @@ export function HeroSection() {
         aria-hidden="true"
       />
 
-      <h1 className="max-w-[640px] text-balance text-[clamp(2.25rem,6vw,4.5rem)] font-bold leading-[1.08] tracking-tight">
-        See who is in the room.
+      <p className="text-sm font-medium uppercase tracking-[0.2em] text-primary">
+        Dallas AI Direct
+      </p>
+
+      <h1 className="mt-5 max-w-[720px] text-balance text-[clamp(2.25rem,6vw,4rem)] font-bold leading-[1.1] tracking-tight">
+        Connecting 10,000+ minds building the future of AI in Dallas.
       </h1>
 
-      <p className="mt-5 max-w-md text-pretty text-base leading-relaxed text-muted-foreground md:text-lg md:leading-relaxed">
-        Real-time attendee directory for Dallas AI events.
-        Scan the QR, share your signal, find your people.
+      <p className="mt-5 max-w-lg text-pretty text-base leading-relaxed text-muted-foreground md:text-lg md:leading-relaxed">
+        The live directory for Dallas AI events. Share what you are working on, find the right people, and turn every meetup into your next opportunity.
       </p>
 
       <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -33,16 +36,16 @@ export function HeroSection() {
           href="/room"
           className="focus-ring inline-flex h-12 items-center justify-center rounded-full border border-border px-8 text-sm font-semibold transition-colors hover:bg-secondary active:scale-[0.98]"
         >
-          View Directory
+          Browse the Room
         </Link>
       </div>
 
       {/* Value propositions */}
       <dl className="mt-16 grid w-full max-w-lg grid-cols-3 gap-px overflow-hidden rounded-2xl border border-border bg-border">
         {[
-          { term: "Real-time", def: "5 s refresh" },
-          { term: "Privacy-first", def: "Email hidden" },
-          { term: "Intent signals", def: "Help offered" },
+          { term: "10,000+", def: "Community members" },
+          { term: "Privacy-first", def: "Email never shared" },
+          { term: "Live signals", def: "Hiring, learning, building" },
         ].map((item) => (
           <div
             key={item.term}
