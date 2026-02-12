@@ -49,6 +49,13 @@ Define global delivery standards for Dallas AI Direct Alpha repository outputs.
 - Runbook supports timed live demo execution.
 - All required files exist and remain internally consistent.
 
+## Project Structure Notes
+
+- Frontend app scaffold uses Next.js App Router in `app/`.
+- Shared shell is centralized in `app/layout.tsx`; route pages are at `app/<route>/page.tsx`.
+- Type checking runs with `npm run typecheck`.
+- App shell regression checks run with `npm test` (Node test runner).
+
 ## Skills used
 
 - manual policy update from user direction (no additional local skill file applied in this edit)
