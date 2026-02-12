@@ -1,6 +1,7 @@
 :root {
   color-scheme: light;
-  font-family: "Geist", "Inter", "SF Pro Text", "Segoe UI", sans-serif;
+  font-family: var(--font-geist-sans), "Inter", "SF Pro Text", "Segoe UI", sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
   --bg: #fafafa;
   --surface: #ffffff;
   --text-primary: #111111;
