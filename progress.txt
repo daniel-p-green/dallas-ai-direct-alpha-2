@@ -44,3 +44,9 @@ Started: 2026-02-12 03:02 America/Chicago
 - Expanded `npm test` to run all `tests/*.test.mjs` suites so doc tests execute with existing app-shell tests.
 - **Learnings:** For documentation stories in this repo, executable `node:test` content checks provide fast, deterministic acceptance coverage without adding UI harness complexity.
 ---
+## 2026-02-12 04:24 America/Chicago - US-001 retry validation: app shell scaffold
+- Verified App Router scaffold remains present for `/`, `/signup`, `/room`, `/admin` with shared `app/layout.tsx` shell.
+- Re-ran acceptance checks: `npm run typecheck`, `npm test`, and `tests/validate-brand-guidelines.sh` all pass.
+- No code changes were required because existing US-001 implementation already satisfies route, banner, and footer acceptance criteria.
+- **Learnings:** Retry runs may be validation-only when prior commits already meet story-level requirements; keep evidence current via deterministic test output.
+---
