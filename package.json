@@ -10,17 +10,17 @@
     "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.100.0",
+    "@supabase/supabase-js": "^2.95.3",
     "geist": "^1.7.0",
-    "next": "15.1.13",
+    "next": "15.1.11",
     "react": "19.0.0",
     "react-dom": "19.0.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.48.0",
-    "@types/node": "^22.15.0",
-    "@types/react": "^19.0.10",
-    "@types/react-dom": "^19.0.5",
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^22.13.5",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.5.1",
     "tailwindcss": "^3.4.17",
