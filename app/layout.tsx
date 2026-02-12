@@ -1,46 +1,35 @@
-import type { ReactNode } from 'react';
-import Image from 'next/image';
-import { GeistSans } from 'geist/font/sans';
-import { GeistMono } from 'geist/font/mono';
-import './globals.css';
+import type { ReactNode } from "react"
+import type { Metadata, Viewport } from "next"
+import { GeistSans } from "geist/font/sans"
+import { GeistMono } from "geist/font/mono"
+import { EnvironmentBanner } from "@/components/environment-banner"
+import { SharedHeader } from "@/components/shared-header"
+import { SharedFooter } from "@/components/shared-footer"
+import "./globals.css"
 
-export const metadata = {
-  title: 'Dallas AI Direct Alpha',
-  description: 'Live demo shell for Dallas AI Direct Alpha'
-};
+export const metadata: Metadata = {
+  title: "Dallas AI Direct Alpha",
+  description:
+    "Live attendee room board for Dallas AI meetups. See who is in the room with privacy-first attendee signals.",
+}
 
-function EnvironmentBanner() {
-  return (
-    <div className="envBanner" role="status" aria-label="environment banner">
-      <span>ALPHA DEMO</span>
-      <span>ENV: STAGE</span>
-      <span>PUBLIC VIEW SAFE</span>
-    </div>
-  );
+export const viewport: Viewport = {
+  themeColor: "#111111",
+  width: "device-width",
+  initialScale: 1,
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
-      <body className={GeistSans.className}>
+      <body className={`${GeistSans.className} min-h-screen`}>
         <EnvironmentBanner />
-        <header className="header">
-          <div className="brandLockup">
-            <Image
-              src="/brand/dallas-ai-logo-color.png"
-              alt="Dallas AI"
-              width={148}
-              height={40}
-              priority
-              className="brandLogo"
-            />
-          </div>
-          <h1>Dallas AI Direct Alpha</h1>
-          <p>Fast, private attendee signal for in-room demo moments.</p>
-        </header>
-        <main className="main">{children}</main>
-        <footer className="footer">Email stays private and is never displayed publicly on the room board.</footer>
+        <SharedHeader />
+        <main className="mx-auto w-full max-w-5xl px-4 pb-8 md:px-6">
+          {children}
+        </main>
+        <SharedFooter />
       </body>
     </html>
-  );
+  )
 }
