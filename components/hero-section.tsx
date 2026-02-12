@@ -1,41 +1,31 @@
-import Image from "next/image"
 import Link from "next/link"
 
 export function HeroSection() {
   return (
-    <section className="flex flex-col items-center gap-8 py-12 text-center md:py-20">
-      <Image
-        src="/brand/dallas-ai-logo-color.png"
-        alt="Dallas AI"
-        width={200}
-        height={54}
-        priority
-        className="h-auto w-[160px] md:w-[200px]"
-      />
+    <section className="flex flex-col items-center gap-8 py-20 text-center md:py-32">
       <div className="flex max-w-2xl flex-col gap-4">
-        <h1 className="text-balance text-3xl font-bold leading-tight tracking-tight md:text-5xl">
+        <h1 className="text-balance text-4xl font-bold leading-tight md:text-6xl">
           See who is in the room
         </h1>
-        <p className="text-pretty text-lg leading-relaxed text-muted-foreground md:text-xl">
-          Dallas AI Direct Alpha shows a public-safe attendee board with
-          database-boundary access control and consent-first profile visibility.
+        <p className="text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
+          Real-time attendee visibility for Dallas AI events. Privacy-first design with database-boundary access control.
         </p>
       </div>
       <div className="flex flex-col gap-3 sm:flex-row">
         <Link
           href="/signup"
-          className="inline-flex min-h-[44px] items-center justify-center rounded-[var(--radius)] bg-primary px-6 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+          className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
         >
-          Join via QR
+          Join Event
         </Link>
         <Link
           href="/room"
-          className="inline-flex min-h-[44px] items-center justify-center rounded-[var(--radius)] border border-border bg-card px-6 text-sm font-semibold text-card-foreground transition-colors hover:bg-accent"
+          className="inline-flex h-10 items-center justify-center rounded-md border border-border bg-background px-6 text-sm font-medium transition-colors hover:bg-secondary"
         >
           View Room Board
         </Link>
       </div>
-      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+      <div className="flex items-center gap-2 text-xs text-muted-foreground">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"
