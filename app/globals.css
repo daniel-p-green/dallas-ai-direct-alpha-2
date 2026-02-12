@@ -93,7 +93,7 @@
     background-color: hsl(var(--primary) / 0.08);
   }
   to {
-    background-color: hsl(var(--card));
+    background-color: var(--card);
   }
 }
 .just-joined {
