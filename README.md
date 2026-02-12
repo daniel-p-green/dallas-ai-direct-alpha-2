@@ -1,88 +1,221 @@
-# Dallas AI Direct Alpha
+# Dallas AI Direct – Alpha
 
-Secure, community-owned attendee directory for Dallas AI Direct talks. This alpha replaces paid Meetup directory access for in-room visibility while protecting attendee privacy.
+Reference implementation for a governed, community-owned attendee directory built for live events.
 
-## Business Case and ROI Math
+---
 
-Dallas AI Meetup has 10,000+ members. Meetup directory access introduces paid dependency for organizer outcomes.
+## Executive Summary
 
-| Variable | Low | High |
-|---|---:|---:|
-| Paying members | 1,000 (10%) | 1,000 (10%) |
-| Annual fee per member | $3 | $5 |
-| Annual gross spend | $3,000 | $5,000 |
-| Event cadence multiplier (12 events/yr equivalent value) | 12x | 12x |
-| Annualized value at scale | $36,000 | $60,000 |
+Dallas AI Direct Alpha addresses a concrete operating constraint: dependency on paid third-party attendee directory access. Dallas AI has 10,000+ members, and at 10% paid participation with $3 to $5 annual pricing, this represents an estimated $36,000 to $60,000 annualized cost exposure. This project demonstrates a lower-cost, governed alternative that preserves participant trust. The architecture enforces access at the database boundary with Supabase RLS and a projection view (`attendees_public`) that excludes email from public reads. The design uses explicit consent for optional profile visibility and keeps sensitive data private by default. The live demo proves a simple hero moment: QR signup in about 30 seconds, room board update within 5 seconds, and no public email exposure. This repository demonstrates a repeatable AI Infrastructure Sprint pattern that delivers a working artifact in hours, not a slide deck.
 
-This alpha demonstrates a lower-cost and higher-control alternative using v0 + Supabase.
+---
+
+## Business Constraint and ROI
+
+### Constraint
+Teams rely on third-party directory access to understand event participation in real time.
+
+### Economic impact
+
+| Input | Value |
+| --- | ---: |
+| Member base | 10,000+ |
+| Paying share assumption | 10% |
+| Price per paying member (annual) | $3 to $5 |
+| Annualized exposure | $36,000 to $60,000 |
+
+### What changed economically?
+
+- Replaced recurring access dependency with owned infrastructure.
+- Reduced exposure to vendor policy and pricing changes.
+- Improved governance over sensitive attendee data.
+- Enabled faster iteration under direct team control.
+- Created a reusable sprint model for future revenue workflows.
+
+---
+
+## Hero Moment
+
+Attendees scan a QR code, submit in about 30 seconds, and appear on the room board within 5 seconds. The board reads only public-safe fields. Email never appears on public surfaces. Database boundary controls enforce the policy even if UI behavior changes.
+
+---
 
 ## Architecture Overview
 
-- **Frontend:** Next.js app (v0-generated UI can plug in here).
-- **Backend:** Supabase Postgres + Supabase Auth.
-- **Core tables:** `attendees`.
-- **Public read model:** `attendees_public` view.
-- **Live demo flow:** QR code -> signup form -> insert into `attendees` -> room directory reads `attendees_public` only.
+```text
+Client (QR + Browser)
+        |
+        v
+API Route (Validated Insert)
+        |
+        v
+Supabase Postgres
+        |
+        v
+RLS (Deny by Default)
+        |
+        v
+attendees_public View
+        |
+        v
+Room Board (Polling every 5s)
+```
 
-## Security Overview (RLS First)
+### Why this architecture
 
-- Enable Row Level Security on all sensitive tables.
-- Treat `email` as sensitive data.
-- Store private data in base table.
-- Expose public directory fields through `attendees_public` view only.
-- Never read directory from `attendees` directly.
-- Documented policy SQL lives in `docs/rls-policies.md`.
+- Enforces access where data lives, not where rendering happens.
+- Uses projection boundary (`attendees_public`) to prevent email leakage.
+- Separates base table writes from public reads.
+- Uses polling over realtime for demo reliability and lower operational variance.
 
-## Demo Flow
+---
 
-1. Speaker presents QR code during Q and A.
-2. Attendee opens form and submits profile + preferences.
-3. System inserts into `attendees`.
-4. Live room dashboard updates from `attendees_public`.
-5. Dashboard shows count and AI comfort distribution.
-6. Dashboard never shows `email`.
+## Data Model and Consent Design
 
-## Local Run
+### Core fields
 
-1. Install dependencies:
-   - `npm install`
-2. Configure environment:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `SUPABASE_SERVICE_ROLE_KEY` (server use only)
-3. Apply SQL docs to Supabase project:
-   - `docs/data-model.md`
-   - `docs/rls-policies.md`
-4. Start app:
-   - `npm run dev`
+- Required: `name`, `email`, `ai_comfort_level`, `help_needed`, `help_offered`
+- Optional: `linkedin_url`, `title`, `company`, `other_help_needed`, `other_help_offered`
+- Consent flag: `display_title_company` (default `false`)
 
-## Extend with Skills (Canonical)
+### Design principles in data model
 
-This repository uses environment skills as the canonical extension mechanism.
+- **Least privilege:** public UI reads from projection only.
+- **Projection boundary:** `attendees_public` excludes sensitive/private fields.
+- **Explicit consent:** title/company display requires opt-in.
+- **Sensitive-by-default:** email remains private across public flows.
 
-1. Discover available skills:
-   - Inspect local skills directory under OpenClaw skill paths.
-   - Use available OpenClaw tooling to list/load skills.
-2. Select task-specific skill before major edits.
-3. Record which skill informed changes in PR notes and commit body.
-4. Follow folder-level `agents.md` instructions in:
-   - `/agents.md`
-   - `/docs/agents.md`
-   - `/tests/agents.md`
-   - `/ops/agents.md`
+---
 
-## Repo Structure
+## Security Posture
 
-- `docs/` product, security, privacy/consent, architecture, roadmap, runbook
-- `tests/` markdown test plans
-- `ops/` checklists and incident response
+### 1) Database controls
 
+- RLS enabled and forced on sensitive table.
+- Deny-by-default select posture on base table.
+- Unique index on normalized email.
+- Check constraints for ranges and field limits.
+- Public projection view excludes email.
 
+### 2) Application controls
 
-## Design System
+- Honeypot field for low-effort bot filtering.
+- Server-side validation for payload shape and bounds.
+- Optional throttling strategy for burst abuse.
+- Escaped rendering to reduce injection risk.
 
+### 3) STRIDE summary
+
+| Threat | Primary mitigation | Residual risk |
+| --- | --- | --- |
+| Spoofing | Honeypot + validation | Moderate in anonymous alpha |
+| Tampering | Server validation + DB constraints | Low to moderate |
+| Repudiation | Event logs + timestamps | Moderate |
+| Information disclosure | RLS + `attendees_public` boundary | Low if controls stay enforced |
+| Denial of service | Throttling + fallback mode | Moderate under hostile traffic |
+| Elevation of privilege | No public base-table reads | Low to moderate |
+
+---
+
+## Runtime Validation Discipline
+
+Pre-demo runtime validation is a release gate.
+
+- Preflight SQL checks for table/view access behavior
+- Email non-exposure verification in payload and UI
+- Duplicate insert rejection check
+- Comfort-level bounds check
+- XSS rendering sanity check
+- Mobile QR sanity checklist for iPhone Safari and Android Chrome
+
+Go/No-Go requires all privacy and boundary checks to pass.
+
+References:
+- `docs/runtime-validation.md`
+- `ops/preflight.md`
+- `tests/ui-mobile-audit.md`
+
+---
+
+## Why this is not just a directory
+
+This implementation acts as a projection-bound identity and capability mapping layer. It demonstrates a reusable pattern for governed AI-enabled workflows inside organizations. The value is not the UI alone. The value is constraint removal with enforceable controls.
+
+---
+
+## AI Infrastructure Sprint Model
+
+1. Constraint mapping
+2. Architecture and governance design
+3. Working alpha delivery
+4. ROI framing and roadmap handoff
+
+This sprint produces a working artifact, not a slide deck.
+
+---
+
+## Setup Overview (High level)
+
+### Stack
+
+- Next.js
+- Supabase Postgres
+- Supabase RLS policies
+
+### Environment variables
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY` (server-side only)
+
+### Setup outline
+
+1. Provision Supabase project.
+2. Apply schema and RLS docs.
+3. Start app locally.
+4. Run runtime validation checks.
+
+References:
+- `docs/data-model.md`
+- `docs/rls-policies.md`
+
+---
+
+## Design Principles
+
+- Enforce access at the database boundary.
+- Never expose sensitive fields on public surfaces.
+- Prefer reliability over flash.
+- Build the smallest system that proves constraint removal.
+- Make consent explicit and default-safe.
+- Keep operational knobs separate from reference artifacts.
+
+---
+
+## What we deliberately did not do
+
+- No OAuth/SSO flows in alpha.
+- No realtime subscription dependency for demo path.
+- No marketing or compliance claims.
+- No schema overreach beyond current constraint.
+- No dependency expansion outside core stack.
+
+---
+
+## Repository Navigation
+
+- `docs/` architecture, security, policy, runbooks
+- `tests/` validation plans and smoke checks
+- `ops/` operational checklists and incident guidance
+- `prompts/v0/` deterministic UI build orchestration
+
+Design references:
 - `docs/brand-guidelines.md`
 - `docs/ui-patterns.md`
 - `docs/assets.md`
 
-Privacy baseline: email never appears on any public UI surface.
+---
+
+## Closing
+
+This repository demonstrates how to replace vague AI readiness discussions with a governed, working system in hours. We build this pattern inside organizations around revenue constraints.
