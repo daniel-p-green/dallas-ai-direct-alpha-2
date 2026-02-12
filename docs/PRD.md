@@ -35,6 +35,7 @@ or email exposure risk.
 7. Public UI reads from `attendees_public` only.
 8. Insert path writes to `attendees`.
 9. System displays aggregate metrics without private fields.
+10. System displays approved Dallas AI logo assets on shared demo shell and hero surfaces.
 
 ## Non-functional requirements
 

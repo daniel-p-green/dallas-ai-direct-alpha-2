@@ -1,6 +1,6 @@
-# Brand Guidelines (Geist-Style Conventions)
+# Brand Guidelines (Dallas AI Primary, Geist Implementation)
 
-This document defines the minimum brand rules for Dallas AI Direct Alpha demo assets. We align with Geist-style conventions for clarity and restraint. We do not claim official Vercel endorsement, partnership, or certification.
+This document defines the minimum brand rules for Dallas AI Direct Alpha demo assets. Dallas AI branding leads every demo surface. The team uses Geist-style conventions for implementation clarity and restraint. We do not claim official Vercel endorsement, partnership, or certification.
 
 ## Typography
 
@@ -64,6 +64,23 @@ Rules:
 - Do not use branded third-party logos unless legal approval exists.
 - Preserve whitespace around icons; avoid tight visual crowding.
 
+## Logo System
+
+Use Dallas AI logo assets as the primary visual brand signal.
+
+- **Primary logo asset:** `public/brand/dallas-ai-logo-color.png`
+- **Inverse logo asset:** `public/brand/dallas-ai-logo-white.png`
+- **Minimum rendered width:** 120px for desktop and 96px for mobile
+- **Clear space:** keep at least 16px clear space around all sides
+- **Required placements:** app shell header, demo hero, and key runbook screenshots
+
+Rules:
+- Use the color logo on light backgrounds.
+- Use the white logo on dark backgrounds.
+- Keep original aspect ratio; do not stretch or crop.
+- Do not add shadows, glows, color overlays, or effects.
+- Keep Dallas AI logo visually dominant over framework styling cues.
+
 ## Accessibility Guardrails
 
 Design every demo artifact for readability, keyboard use, and privacy trust.
@@ -78,3 +95,8 @@ Privacy guardrail:
 
 Messaging guardrail:
 - Reference Geist-style conventions as inspiration only; do not present the system as officially endorsed by Vercel.
+
+## Skills used
+
+- Source scan attempted: `~/.openclaw/skills` (directory not present in current environment)
+- Applied: repository `agents.md` standards and testable requirement style

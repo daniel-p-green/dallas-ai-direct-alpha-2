@@ -1,7 +1,7 @@
 "use client";
 
-import { Linkedin } from '@geist-ui/icons';
 import { useEffect, useMemo, useState } from 'react';
+import { getSupabaseBrowserClient, hasSupabaseBrowserEnv } from '../../lib/supabase/browser';
 
 type Attendee = {
   name: string;
@@ -32,6 +32,28 @@ const seed: Attendee[] = [
   }
 ];
 
+/** Inline LinkedIn icon – avoids @geist-ui/icons dependency */
+function LinkedinIcon({ size = 15 }: { size?: number }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+      <rect x="2" y="9" width="4" height="12" />
+      <circle cx="4" cy="4" r="2" />
+    </svg>
+  );
+}
+
 function ComfortDots({ level }: { level: number }) {
   return (
     <span className="comfort" aria-label={`Comfort level ${level}`}>
@@ -44,21 +66,92 @@ function ComfortDots({ level }: { level: number }) {
 }
 
 export default function RoomPage() {
-  const [lastPollAt, setLastPollAt] = useState(Date.now());
-
-  useEffect(() => {
-    const timer = setInterval(() => setLastPollAt(Date.now()), 5000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const attendees = useMemo(
+  const fallbackAttendees = useMemo(
     () => [...seed].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()),
     []
   );
+  const [attendees, setAttendees] = useState<Attendee[]>(fallbackAttendees);
+  const [dataMode, setDataMode] = useState<'live' | 'fallback'>(hasSupabaseBrowserEnv() ? 'live' : 'fallback');
+  const [loadMessage, setLoadMessage] = useState<string | null>(null);
+  const [lastPollAt, setLastPollAt] = useState(Date.now());
+  // Track whether client has mounted to avoid hydration mismatch on time-dependent rendering
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    let isActive = true;
+
+    const loadAttendees = async () => {
+      if (!hasSupabaseBrowserEnv()) {
+        if (isActive) {
+          setDataMode('fallback');
+          setLoadMessage('Showing demo seed data. Configure public Supabase variables for live room data.');
+          setAttendees(fallbackAttendees);
+          setLastPollAt(Date.now());
+        }
+        return;
+      }
+
+      try {
+        const supabase = getSupabaseBrowserClient();
+        const { data, error } = await supabase
+          .from('attendees_public')
+          .select('name,title,company,linkedin_url,ai_comfort_level,help_offered,created_at')
+          .order('created_at', { ascending: false })
+          .limit(200);
+
+        if (error) {
+          if (isActive) {
+            setDataMode('fallback');
+            setLoadMessage('Live room data is unavailable. Showing demo seed data.');
+            setAttendees(fallbackAttendees);
+            setLastPollAt(Date.now());
+          }
+          return;
+        }
+
+        const mapped: Attendee[] = (data ?? []).map((row) => ({
+          name: typeof row.name === 'string' && row.name.trim().length > 0 ? row.name : 'Attendee',
+          title: typeof row.title === 'string' ? row.title : undefined,
+          company: typeof row.company === 'string' ? row.company : undefined,
+          linkedin_url: typeof row.linkedin_url === 'string' ? row.linkedin_url : undefined,
+          ai_comfort_level: typeof row.ai_comfort_level === 'number' ? row.ai_comfort_level : 1,
+          help_offered: Array.isArray(row.help_offered)
+            ? row.help_offered.filter((value): value is string => typeof value === 'string')
+            : [],
+          created_at: typeof row.created_at === 'string' ? row.created_at : new Date().toISOString()
+        }));
+
+        if (isActive) {
+          setDataMode('live');
+          setLoadMessage(null);
+          setAttendees(mapped);
+          setLastPollAt(Date.now());
+        }
+      } catch {
+        if (isActive) {
+          setDataMode('fallback');
+          setLoadMessage('Live room data is unavailable. Showing demo seed data.');
+          setAttendees(fallbackAttendees);
+          setLastPollAt(Date.now());
+        }
+      }
+    };
+
+    setMounted(true);
+    loadAttendees();
+    const timer = setInterval(loadAttendees, 5000);
+    return () => {
+      isActive = false;
+      clearInterval(timer);
+    };
+  }, [fallbackAttendees]);
 
   const updatedAgo = Math.max(1, Math.floor((Date.now() - lastPollAt) / 1000));
-  const avgComfort = (attendees.reduce((n, a) => n + a.ai_comfort_level, 0) / attendees.length).toFixed(1);
-  const highPct = Math.round((attendees.filter((a) => a.ai_comfort_level >= 4).length / attendees.length) * 100);
+  const attendeeCount = attendees.length;
+  const avgComfort =
+    attendeeCount > 0 ? (attendees.reduce((n, a) => n + a.ai_comfort_level, 0) / attendeeCount).toFixed(1) : '0.0';
+  const highPct =
+    attendeeCount > 0 ? Math.round((attendees.filter((a) => a.ai_comfort_level >= 4).length / attendeeCount) * 100) : 0;
 
   return (
     <section className="pageCard stack">
@@ -69,11 +162,15 @@ export default function RoomPage() {
         </div>
         <span className="updatedAt">Updated {updatedAgo}s ago</span>
       </div>
+      <p className="muted" style={{ marginTop: -8 }}>
+        Data mode: {dataMode === 'live' ? 'Live attendees_public feed' : 'Fallback demo seed data'}
+      </p>
+      {loadMessage ? <p className="helper">{loadMessage}</p> : null}
 
       <div className="metrics">
         <div className="metricCard">
           <p className="metricLabel">Total attendees</p>
-          <p className="metricValue">{attendees.length}</p>
+          <p className="metricValue">{attendeeCount}</p>
         </div>
         <div className="metricCard">
           <p className="metricLabel">Average comfort</p>
@@ -87,7 +184,8 @@ export default function RoomPage() {
 
       <div className="attendeeList">
         {attendees.map((a) => {
-          const justJoined = Date.now() - new Date(a.created_at).getTime() <= 5000;
+          // Only compute justJoined after mount to avoid server/client hydration mismatch
+          const justJoined = mounted && Date.now() - new Date(a.created_at).getTime() <= 5000;
           return (
             <article key={`${a.name}-${a.created_at}`} className={`attendeeRow ${justJoined ? 'justJoined' : ''}`}>
               <div className="nameBlock">
@@ -103,7 +201,7 @@ export default function RoomPage() {
                 rel="noreferrer"
                 aria-label="Open LinkedIn profile"
               >
-                <Linkedin size={15} />
+                <LinkedinIcon size={15} />
               </a>
             </article>
           );

@@ -10,6 +10,7 @@ This project does not claim official endorsement by Vercel or Geist.
 Set context in one viewport and direct the attendee to the next action.
 
 ### Required Content
+- Dallas AI logo lockup at top-left using approved asset from `public/brand`
 - Eyebrow label: `ALPHA DEMO`
 - Outcome-focused headline (single sentence)
 - Supporting line that states public and private data boundaries
@@ -24,6 +25,7 @@ Set context in one viewport and direct the attendee to the next action.
 - Do keep headline concise and readable from projector distance.
 - Do keep high text contrast against the background.
 - Do keep copy in active voice.
+- Do keep Dallas AI logo visible without distortion at all responsive breakpoints.
 - Don't introduce promotional claims or endorsement language.
 - Don't include attendee email or any private field in banner content.
 
@@ -58,6 +60,7 @@ Show who is in the room using only public-safe attendee data.
 
 ### Required Content
 - Header title for the room board
+- Dallas AI logo lockup in board chrome or shared shell
 - Badge: `Public view - emails excluded`
 - Last-updated timestamp
 - Metrics row: total attendees, comfort summary, high-comfort rate
@@ -72,6 +75,7 @@ Show who is in the room using only public-safe attendee data.
 - Do read only from the public projection (`attendees_public`).
 - Do keep row height stable to prevent visual jitter.
 - Do represent LinkedIn with icon-only treatment when present.
+- Do keep Dallas AI logo treatment consistent with the hero and signup pages.
 - Don't include private identifiers, including email.
 - Don't infer or display data that users did not provide.
 
@@ -93,3 +97,8 @@ Reinforce privacy behavior where users make data-entry decisions.
 - Do preserve meaning if wording is shortened for layout.
 - Don't add legal guarantees beyond implemented behavior.
 - Don't reference third-party endorsement or certification.
+
+## Skills used
+
+- Source scan attempted: `~/.openclaw/skills` (directory not present in current environment)
+- Applied: repository `agents.md` standards and testable requirement style

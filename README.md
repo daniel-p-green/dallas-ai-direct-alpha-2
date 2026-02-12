@@ -213,6 +213,7 @@ References:
 - `tests/` validation plans and smoke checks
 - `ops/` operational checklists and incident guidance
 - `prompts/v0/` deterministic UI build orchestration
+- `v0-build/` isolated non-code context + brand pack + target workspace for v0-generated build output
 
 ## Design System
 
@@ -220,6 +221,9 @@ For demo-facing UI, use the minimal design system package:
 - `docs/brand-guidelines.md`
 - `docs/ui-patterns.md`
 - `docs/assets.md`
+
+Brand implementation rule:
+- Dallas AI logo assets in `public/brand/` are required on shared demo shell and hero-facing surfaces.
 
 ---
 

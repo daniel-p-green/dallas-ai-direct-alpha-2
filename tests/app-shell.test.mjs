@@ -38,8 +38,20 @@ test('shared header renders title and subtitle', () => {
   assert.match(layout, /Fast, private attendee signal for in-room demo moments\./);
 });
 
+test('shared header includes Dallas AI brand logo asset', () => {
+  const layout = read('app/layout.tsx');
+
+  assert.match(layout, /\/brand\/dallas-ai-logo-color\.png/);
+  assert.match(layout, /alt="Dallas AI"/);
+});
+
+test('Dallas AI logo assets exist in public brand directory', () => {
+  assert.equal(fs.existsSync(path.join(repoRoot, 'public/brand/dallas-ai-logo-color.png')), true);
+  assert.equal(fs.existsSync(path.join(repoRoot, 'public/brand/dallas-ai-logo-white.png')), true);
+});
+
 test('shared footer renders required privacy text', () => {
   const layout = read('app/layout.tsx');
 
-  assert.match(layout, /Email stays private and never appears on the public board\./);
+  assert.match(layout, /Email stays private and is never displayed publicly on the room board\./);
 });

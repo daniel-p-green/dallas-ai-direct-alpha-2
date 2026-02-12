@@ -60,6 +60,15 @@ a {
   padding: var(--space-6) 0 var(--space-4);
 }
 
+.brandLockup {
+  margin-bottom: var(--space-3);
+}
+
+.brandLogo {
+  height: auto;
+  width: 148px;
+}
+
 .header h1 {
   margin: 0;
   font-size: clamp(28px, 3vw, 36px);

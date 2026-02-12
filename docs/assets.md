@@ -1,5 +1,20 @@
 # Asset and Icon Policy
 
+## Dallas AI logo assets
+
+Use Dallas AI logos as first-party brand assets for demo-facing UI and documentation.
+
+| Asset | Path | Approved usage |
+| --- | --- | --- |
+| Dallas AI logo (color) | `public/brand/dallas-ai-logo-color.png` | Light backgrounds in app shell, hero, and docs |
+| Dallas AI logo (white) | `public/brand/dallas-ai-logo-white.png` | Dark backgrounds in demo slides and screenshots |
+
+Rules:
+- Use logo files exactly as stored; do not alter colors or proportions.
+- Keep clear space of at least 16px around the logo.
+- Keep rendered logo width at or above 120px desktop and 96px mobile.
+- Keep Dallas AI logo visible above fold on the primary demo surface.
+
 ## Approved icon usage
 
 Use lightweight, open icon assets for UI indicators in alpha.
@@ -42,6 +57,6 @@ It does not claim official endorsement by Vercel or Geist.
 
 ## Skills used
 
-- Source: `~/.openclaw/skills`
-- Applied: `verification-before-completion`
-- Notes: Used to keep asset policy concise and audit-friendly.
+- Source scan attempted: `~/.openclaw/skills` (directory not present in current environment)
+- Applied: repository `agents.md` standards and testable requirement style
+- Notes: Added first-party Dallas AI logo inventory and placement constraints.
