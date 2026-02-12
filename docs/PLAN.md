@@ -1,44 +1,71 @@
 # Plan of Record: Dallas AI Direct Alpha
 
 ## Goal
-Deliver a secure, low-friction attendee directory experience that answers "Who is in the room?" in near real time without exposing emails.
 
-## Hero Moment
-Attendees scan a QR code during Q and A, complete signup, and appear on the live room dashboard within seconds with aggregate room metrics.
+Deliver a secure, low-friction attendee directory that answers
+"Who is in the room?" in near real time without exposing email.
 
-## Audience and Stakes
+## Hero moment
+
+Attendees scan a QR code during Q and A, submit in under 30 seconds,
+and appear on the live room board within seconds. The board shows only
+public-safe fields: `name`, `title` (if provided), `company` (if
+provided), `ai_comfort_level`, `help_offered`, and `linkedin_url`.
+The board never shows `email`.
+
+## Audience and stakes
+
 - Primary audience: CISOs, security leaders, and technical decision makers.
-- Stakes: privacy trust, live demo reliability, and enterprise adoption confidence.
+- Stakes: privacy trust, live demo reliability, and enterprise confidence.
 
 ## Non-goals
+
 - Full CRM replacement.
-- Advanced social networking features.
-- Multi-event analytics warehouse.
+- Deep social graph features.
+- Multi-event warehouse analytics.
 
-## Minimal Steps
-1. Create data model with sensitive field separation.
-2. Enable RLS and implement deny-by-default policies.
-3. Create `attendees_public` view excluding email.
-4. Build QR signup write path into `attendees`.
-5. Build directory read path from `attendees_public` only.
-6. Add basic abuse controls and rehearsed demo fallback.
+## Minimal steps
 
-## Key Decisions
+1. Define schema with sensitive/private separation.
+2. Add optional `title` and `company` fields to `attendees`.
+3. Enable RLS and enforce deny-by-default policies.
+4. Create `attendees_public` view that excludes `email`.
+5. Insert attendee records into `attendees`.
+6. Read directory data from `attendees_public` only.
+7. Add abuse controls and rehearse fallback paths.
+
+## Key decisions
+
 | Decision | Choice | Rationale |
-|---|---|---|
+| --- | --- | --- |
 | Data store | Supabase Postgres | Strong RLS and fast setup |
-| Security model | RLS-first | Enforce backend access control |
-| Public reads | `attendees_public` view | Prevent accidental email leakage |
-| Alpha access | Optional password gate | Convenience only, not primary security |
+| Security boundary | Database controls first | Enforces policy even if UI fails |
+| Public reads | `attendees_public` view | Prevents accidental email exposure |
+| Optional fields | `title`, `company` | Aligns schema with on-stage narrative |
+| Alpha gate | Optional password gate | Convenience only, not primary security |
 
-## Failure Modes and Pivots
-- Realtime lag -> switch to short polling.
-- QR traffic spike -> enable throttling and staff-assisted check-in.
-- RLS test failure -> stop demo and use sanitized static data.
+## Failure modes and pivots
 
-## Tomorrow Morning Timebox (CST)
-- 07:30-08:00 Security preflight and RLS verification.
-- 08:00-08:30 QR flow rehearsal.
-- 08:30-09:00 Live dashboard and metric checks.
-- 09:00-09:20 Failure-path rehearsal.
-- 09:20-09:40 Go/no-go review.
+- Realtime lag -> switch to 5-second polling.
+- QR traffic spike -> apply throttling and staff-assisted check-in.
+- RLS test failure -> stop live writes and use sanitized dataset.
+
+## Tomorrow morning timebox (CST)
+
+- 07:30-08:00: RLS and policy preflight.
+- 08:00-08:20: schema + view validation (`title`, `company` optional).
+- 08:20-08:45: QR flow and abuse-control rehearsal.
+- 08:45-09:10: live board + metrics verification.
+- 09:10-09:25: fallback drill and operator handoff.
+- 09:25-09:40: go/no-go review.
+
+## Demo line to memorize
+
+We enforce access control in the database, not in the UI. RLS and a
+public-safe view prevent email exposure even if the front end breaks.
+
+## Skills used
+
+- Scanned `~/.openclaw/skills` and found `antfarm-workflows/SKILL.md`.
+- No Supabase/RLS-specific skill exists there today, so this file applies
+  repository security standards directly.

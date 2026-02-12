@@ -1,4 +1,4 @@
-# Supabase RLS Policies and Public View SQL
+# Supabase RLS policies and public view SQL
 
 ## Schema and view
 
@@ -9,6 +9,8 @@ create table if not exists public.attendees (
   id uuid primary key default gen_random_uuid(),
   created_at timestamptz not null default now(),
   name text not null check (char_length(name) between 1 and 120),
+  title text,
+  company text,
   linkedin_url text,
   email text not null,
   ai_comfort_level text not null check (
@@ -27,9 +29,10 @@ select
   id,
   created_at,
   name,
+  title,
+  company,
   linkedin_url,
   ai_comfort_level,
-  help_needed,
   help_offered
 from public.attendees;
 ```
@@ -40,11 +43,11 @@ from public.attendees;
 alter table public.attendees enable row level security;
 ```
 
-## Deny-by-default posture
+## Deny-by-default policy posture
 
 Create no broad allow policies. Add only explicit policies below.
 
-## Insert policy (anon/auth) with honeypot check
+## Insert policy for anon/auth with validation
 
 ```sql
 create policy attendees_insert_anon_auth
@@ -58,11 +61,12 @@ with check (
 );
 ```
 
-## No direct select from attendees for anon/auth
+## No direct public selects from `attendees`
 
-Do not create `for select` policy for `anon` or `authenticated` on `public.attendees`.
+Do not create select policies for `anon` or `authenticated` on
+`public.attendees`.
 
-## Optional staff read policy (future beta)
+## Optional staff select policy for beta
 
 ```sql
 create policy attendees_select_staff_only
@@ -79,23 +83,31 @@ grant select on public.attendees_public to anon, authenticated;
 revoke all on public.attendees from anon, authenticated;
 ```
 
-## Strict target state and alpha note
+## Alpha pattern (explicit)
 
-- Target state: public select works only through `attendees_public`.
-- Target state: no direct table read for public clients.
-- Alpha may use transitional wiring in application code.
-- Test plan must still enforce target-state assertions.
+- UI reads only from `attendees_public`.
+- Inserts go to `attendees`.
+- RLS remains deny-by-default on `attendees`.
+- Optional password gate remains convenience only.
+
+## Target state and test expectation
+
+- Keep all public directory reads on view-only paths.
+- Treat any direct table read in app code as release-blocking.
+- Enforce this with policy and privacy leak tests.
 
 ## Abuse controls
 
-- Unique email constraint blocks duplicate spam by exact email.
-- Honeypot field blocks unsophisticated bots.
-- Server-side validation enforces required fields and value ranges.
+- Unique email constraint blocks duplicate submissions.
+- Honeypot field blocks simple bots.
+- Server-side validation enforces required fields and ranges.
 - Optional throttling strategy:
-  - Edge function or API route rate limits by IP and user-agent.
+  - Rate limit by IP and user-agent.
   - Sliding window: 5 submissions per 10 minutes per IP.
   - Temporary blocklist for repeated abuse signatures.
 
 ## Skills used
 
-- manual policy update from user direction (no additional local skill file applied in this edit)
+- Scanned `~/.openclaw/skills` and found `antfarm-workflows/SKILL.md`.
+- No Supabase/RLS-specific skill exists there today, so this file applies
+  repository RLS standards directly.

@@ -1,8 +1,10 @@
-# Privacy and Consent (Alpha)
+# Privacy and consent (Alpha)
 
 ## Data collected
 
 - `name`
+- `title` (optional)
+- `company` (optional)
 - `linkedin_url`
 - `email` (sensitive)
 - `ai_comfort_level`
@@ -11,37 +13,42 @@
 
 ## Purpose limitation
 
-- Use attendee data to support live room visibility and community matching during the event.
+- Use attendee data to support live room visibility and peer matching.
 - Do not use attendee data for unrelated marketing in alpha.
-- Keep processing limited to documented product workflows.
+- Process only the fields required for documented product behavior.
 
 ## Who can see what
 
 | Data field | Public room view (`attendees_public`) | Internal table (`attendees`) |
 | --- | --- | --- |
-| name | Yes | Yes |
-| linkedin_url | Yes | Yes |
-| email | No | Yes |
-| ai_comfort_level | Yes | Yes |
-| help_needed | Yes | Yes |
-| help_offered | Yes | Yes |
+| `name` | Yes | Yes |
+| `title` | Yes, if provided | Yes |
+| `company` | Yes, if provided | Yes |
+| `linkedin_url` | Yes | Yes |
+| `email` | No | Yes |
+| `ai_comfort_level` | Yes | Yes |
+| `help_needed` | No | Yes |
+| `help_offered` | Yes | Yes |
 
 Directory reads must come from `attendees_public` only.
 
-## Retention assumption for alpha
+## Retention assumptions for alpha
 
-- Keep alpha data only for short-term pilot evaluation.
-- Default target: review and purge within 30 days after the event unless explicit extension is approved.
-- Keep retention behavior documented per event run.
+- Keep data only for short-term pilot evaluation.
+- Default target: purge within 30 days after event close unless an
+  extension receives explicit approval.
+- Track retention decisions per event run.
 
 ## Opt-out and deletion process for alpha
 
-1. Attendee requests deletion through organizer channel.
-2. Operator verifies requester control of submitted email.
-3. Operator deletes attendee row from `attendees`.
-4. Operator confirms removal from `attendees_public`-based directory.
-5. Operator logs deletion event without exposing sensitive values.
+1. Attendee submits deletion request through organizer channel.
+2. Operator verifies requestor control of submitted email.
+3. Operator deletes row from `attendees`.
+4. Operator confirms removal from `attendees_public` output.
+5. Operator logs completion without sensitive values.
 
 ## Skills used
 
-- manual policy update from user direction (no additional local skill file applied in this edit)
+- Scanned `~/.openclaw/skills` and found `antfarm-workflows/SKILL.md`.
+- No privacy-specific skill exists there today, so this file applies
+  repository privacy standards directly.
