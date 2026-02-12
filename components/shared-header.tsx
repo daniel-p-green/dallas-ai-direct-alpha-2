@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -14,9 +15,17 @@ export function SharedHeader() {
       >
         <Link
           href="/"
-          className="focus-ring rounded-md text-[15px] font-semibold tracking-tight"
+          className="focus-ring flex items-center gap-2.5 rounded-md"
         >
-          Dallas AI Direct
+          <Image
+            src="/brand/dallas-ai-logo-white.png"
+            alt=""
+            width={120}
+            height={32}
+            priority
+            className="h-7 w-auto"
+          />
+          <span className="sr-only">Dallas AI Direct</span>
         </Link>
 
         <div className="flex items-center gap-1" role="list">
