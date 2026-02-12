@@ -5,48 +5,48 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 0 0% 7%;
-    --card: 0 0% 98%;
-    --card-foreground: 0 0% 7%;
+    --foreground: 0 0% 5%;
+    --card: 0 0% 97%;
+    --card-foreground: 0 0% 5%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 7%;
+    --popover-foreground: 0 0% 5%;
     --primary: 221 83% 53%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    --secondary: 0 0% 95%;
+    --secondary-foreground: 0 0% 15%;
+    --muted: 0 0% 95%;
+    --muted-foreground: 0 0% 40%;
     --accent: 221 83% 96%;
-    --accent-foreground: 221 83% 40%;
+    --accent-foreground: 221 83% 35%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 92%;
-    --input: 0 0% 90%;
+    --border: 0 0% 90%;
+    --input: 0 0% 88%;
     --ring: 221 83% 53%;
     --radius: 1rem;
-    --success: 152 69% 39%;
+    --success: 152 69% 36%;
     --success-foreground: 0 0% 100%;
   }
 
   .dark {
-    --background: 240 6% 6%;
-    --foreground: 0 0% 98%;
-    --card: 240 4% 10%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 4% 10%;
-    --popover-foreground: 0 0% 98%;
+    --background: 0 0% 5%;
+    --foreground: 0 0% 95%;
+    --card: 0 0% 9%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 9%;
+    --popover-foreground: 0 0% 95%;
     --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 240 4% 16%;
-    --secondary-foreground: 0 0% 93%;
-    --muted: 240 4% 16%;
-    --muted-foreground: 0 0% 64%;
-    --accent: 217 91% 15%;
-    --accent-foreground: 217 80% 76%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 85%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 217 40% 16%;
+    --accent-foreground: 217 70% 78%;
     --destructive: 0 62% 55%;
     --destructive-foreground: 0 0% 100%;
-    --border: 240 4% 18%;
-    --input: 240 4% 18%;
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
     --ring: 217 91% 60%;
     --success: 152 69% 46%;
     --success-foreground: 0 0% 100%;
@@ -59,62 +59,69 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 }
 
-/* Focus-visible ring for keyboard accessibility */
+/* ---- Accessibility ---- */
 .focus-ring {
   @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background;
 }
 
-/* Filter chip states */
-.filter-chip {
-  @apply focus-ring shrink-0 rounded-full border px-4 py-2 text-[13px] font-medium transition-all active:scale-95;
-}
-.filter-chip[data-active="false"] {
-  @apply border-border bg-card text-secondary-foreground hover:bg-secondary hover:text-foreground;
-}
-.filter-chip[data-active="true"] {
-  @apply border-primary bg-primary text-primary-foreground;
+/* Skip link for keyboard users */
+.skip-link {
+  @apply sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-primary-foreground;
 }
 
-/* Attendee card entrance */
+/* ---- Chip / Pill ---- */
+.chip {
+  @apply focus-ring inline-flex shrink-0 items-center justify-center rounded-full border px-4 py-2 text-[13px] font-medium leading-none transition-all select-none active:scale-[0.97];
+}
+.chip[data-active="false"] {
+  @apply border-border bg-card text-foreground/70 hover:bg-secondary hover:text-foreground;
+}
+.chip[data-active="true"] {
+  @apply border-primary bg-primary text-primary-foreground shadow-sm;
+}
+
+/* ---- Inputs ---- */
+.form-input {
+  @apply focus-ring h-12 w-full rounded-xl border border-border bg-card px-4 text-sm text-foreground placeholder:text-muted-foreground transition-colors;
+}
+
+/* ---- Card animations ---- */
 @keyframes card-enter {
   from {
     opacity: 0;
-    transform: translateY(8px) scale(0.98);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 .card-enter {
-  animation: card-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: card-enter 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Just-joined glow ring */
-@keyframes glow-ring {
+@keyframes glow-pulse {
   0% {
-    box-shadow: 0 0 0 0 hsl(var(--primary) / 0.3);
+    box-shadow: 0 0 0 0 hsl(var(--primary) / 0.25);
   }
   70% {
-    box-shadow: 0 0 0 6px hsl(var(--primary) / 0);
+    box-shadow: 0 0 0 8px hsl(var(--primary) / 0);
   }
   100% {
     box-shadow: 0 0 0 0 hsl(var(--primary) / 0);
   }
 }
 .just-joined {
-  animation: glow-ring 2s ease-out;
+  animation: glow-pulse 2s ease-out;
 }
 
-/* Form inputs */
-.form-input {
-  @apply h-12 w-full rounded-2xl border border-border bg-card px-4 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background;
-}
-
-/* Comfort level bar segments */
+/* ---- Comfort segments ---- */
 .comfort-segment {
-  @apply h-1 flex-1 rounded-full transition-all duration-300;
+  @apply h-[3px] flex-1 rounded-full transition-colors duration-300;
 }

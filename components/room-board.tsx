@@ -8,6 +8,9 @@ import {
 import { AttendeeCard, type Attendee } from "@/components/attendee-card"
 import { MetricsStrip } from "@/components/metrics-strip"
 
+/* ------------------------------------------------------------------ */
+/* Seed data -- shown when Supabase is not configured                  */
+/* ------------------------------------------------------------------ */
 const SEED_ATTENDEES: Attendee[] = [
   {
     name: "Jordan Chen",
@@ -61,8 +64,19 @@ const SEED_ATTENDEES: Attendee[] = [
   },
 ]
 
-const ALL_FILTERS = ["All", "Hiring", "Mentoring", "Partnering", "Investing", "Learning", "Selling"] as const
+const FILTERS = [
+  "All",
+  "Hiring",
+  "Mentoring",
+  "Partnering",
+  "Investing",
+  "Learning",
+  "Selling",
+] as const
 
+/* ------------------------------------------------------------------ */
+/* Component                                                           */
+/* ------------------------------------------------------------------ */
 export function RoomBoard() {
   const fallback = useMemo(
     () =>
@@ -74,41 +88,41 @@ export function RoomBoard() {
   )
 
   const [attendees, setAttendees] = useState<Attendee[]>(fallback)
-  const [dataMode, setDataMode] = useState<"live" | "fallback">(
-    hasSupabaseBrowserEnv() ? "live" : "fallback"
+  const [dataMode, setDataMode] = useState<"live" | "seed">(
+    hasSupabaseBrowserEnv() ? "live" : "seed"
   )
-  const [loadMessage, setLoadMessage] = useState<string | null>(null)
-  const [mounted, setMounted] = useState(false)
+  const [notice, setNotice] = useState<string | null>(null)
+  const [ready, setReady] = useState(false)
   const [search, setSearch] = useState("")
-  const [activeFilter, setActiveFilter] = useState<string>("All")
+  const [filter, setFilter] = useState<string>("All")
 
+  /* ---- Filtered list ---- */
   const filtered = useMemo(() => {
-    let result = attendees
-    if (activeFilter !== "All") {
-      result = result.filter((a) => a.help_offered.includes(activeFilter))
+    let list = attendees
+    if (filter !== "All") {
+      list = list.filter((a) => a.help_offered.includes(filter))
     }
-    if (search.trim().length > 0) {
-      const q = search.toLowerCase()
-      result = result.filter(
+    const q = search.trim().toLowerCase()
+    if (q.length > 0) {
+      list = list.filter(
         (a) =>
           a.name.toLowerCase().includes(q) ||
-          (a.title && a.title.toLowerCase().includes(q)) ||
-          (a.company && a.company.toLowerCase().includes(q))
+          a.title?.toLowerCase().includes(q) ||
+          a.company?.toLowerCase().includes(q)
       )
     }
-    return result
-  }, [attendees, activeFilter, search])
+    return list
+  }, [attendees, filter, search])
 
+  /* ---- Polling ---- */
   useEffect(() => {
     let active = true
 
     async function load() {
       if (!hasSupabaseBrowserEnv()) {
         if (active) {
-          setDataMode("fallback")
-          setLoadMessage(
-            "Showing sample data. Connect Supabase to see live attendees."
-          )
+          setDataMode("seed")
+          setNotice("Showing sample data. Connect Supabase to see live attendees.")
           setAttendees(fallback)
         }
         return
@@ -126,8 +140,8 @@ export function RoomBoard() {
 
         if (error) {
           if (active) {
-            setDataMode("fallback")
-            setLoadMessage("Live data unavailable. Showing sample data.")
+            setDataMode("seed")
+            setNotice("Live data unavailable. Showing sample data.")
             setAttendees(fallback)
           }
           return
@@ -143,9 +157,13 @@ export function RoomBoard() {
           linkedin_url:
             typeof row.linkedin_url === "string" ? row.linkedin_url : undefined,
           ai_comfort_level:
-            typeof row.ai_comfort_level === "number" ? row.ai_comfort_level : 1,
+            typeof row.ai_comfort_level === "number"
+              ? row.ai_comfort_level
+              : 1,
           help_offered: Array.isArray(row.help_offered)
-            ? row.help_offered.filter((v): v is string => typeof v === "string")
+            ? row.help_offered.filter(
+                (v): v is string => typeof v === "string"
+              )
             : [],
           created_at:
             typeof row.created_at === "string"
@@ -155,50 +173,67 @@ export function RoomBoard() {
 
         if (active) {
           setDataMode("live")
-          setLoadMessage(null)
+          setNotice(null)
           setAttendees(mapped)
         }
       } catch {
         if (active) {
-          setDataMode("fallback")
-          setLoadMessage("Live data unavailable. Showing sample data.")
+          setDataMode("seed")
+          setNotice("Live data unavailable. Showing sample data.")
           setAttendees(fallback)
         }
       }
     }
 
-    setMounted(true)
+    setReady(true)
     load()
-    const timer = setInterval(load, 5000)
+    const interval = setInterval(load, 5000)
     return () => {
       active = false
-      clearInterval(timer)
+      clearInterval(interval)
     }
   }, [fallback])
 
+  /* ---- Render ---- */
   return (
     <div className="mx-auto w-full max-w-3xl px-5 py-8 md:py-12">
       {/* Page header */}
-      <div className="mb-6">
-        <div className="flex items-center gap-2.5">
-          <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Directory</h1>
-          <span className="flex items-center gap-1.5 rounded-full border border-border bg-card px-2.5 py-0.5">
-            <span className={`inline-block h-1.5 w-1.5 rounded-full ${dataMode === "live" ? "bg-[hsl(var(--success))]" : "bg-muted-foreground"}`} />
+      <div className="mb-8">
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+            Directory
+          </h1>
+          <span
+            className="flex items-center gap-1.5 rounded-full border border-border px-2.5 py-[3px]"
+            aria-label={dataMode === "live" ? "Live data" : "Sample data"}
+          >
+            <span
+              className={`h-1.5 w-1.5 rounded-full ${
+                dataMode === "live"
+                  ? "bg-[hsl(var(--success))]"
+                  : "bg-muted-foreground"
+              }`}
+            />
             <span className="text-[11px] font-medium text-muted-foreground">
               {dataMode === "live" ? "Live" : "Sample"}
             </span>
           </span>
         </div>
-        <p className="mt-1.5 text-sm text-muted-foreground">
-          {mounted ? `${attendees.length} attendee${attendees.length !== 1 ? "s" : ""} in the room` : "Loading attendees..."}
+        <p className="mt-1 text-sm text-muted-foreground">
+          {ready
+            ? `${attendees.length} attendee${attendees.length !== 1 ? "s" : ""} in the room`
+            : "Loading attendees\u2026"}
         </p>
       </div>
 
-      {/* Load message */}
-      {loadMessage && (
-        <div className="mb-5 rounded-2xl border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
-          {loadMessage}
-        </div>
+      {/* Notice */}
+      {notice && (
+        <p
+          className="mb-6 rounded-xl border border-border bg-card px-4 py-3 text-sm text-muted-foreground"
+          role="status"
+        >
+          {notice}
+        </p>
       )}
 
       {/* Metrics */}
@@ -208,7 +243,9 @@ export function RoomBoard() {
 
       {/* Search */}
       <div className="relative mb-4">
-        <label htmlFor="attendee-search" className="sr-only">Search attendees</label>
+        <label htmlFor="attendee-search" className="sr-only">
+          Search attendees
+        </label>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"
@@ -236,36 +273,52 @@ export function RoomBoard() {
       </div>
 
       {/* Filter chips */}
-      <div className="mb-6 flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Filter by help type">
-        {ALL_FILTERS.map((filter) => (
+      <div
+        className="-mx-5 mb-6 flex gap-2 overflow-x-auto px-5 pb-1 scrollbar-none"
+        role="group"
+        aria-label="Filter by help type"
+      >
+        {FILTERS.map((f) => (
           <button
-            key={filter}
-            onClick={() => setActiveFilter(filter)}
-            aria-pressed={activeFilter === filter}
-            data-active={activeFilter === filter ? "true" : "false"}
-            className="filter-chip"
+            key={f}
+            onClick={() => setFilter(f)}
+            aria-pressed={filter === f}
+            data-active={filter === f ? "true" : "false"}
+            className="chip"
           >
-            {filter}
+            {f}
           </button>
         ))}
       </div>
 
-      {/* Attendee cards */}
-      <div className="flex flex-col gap-3">
+      {/* Cards */}
+      <div className="flex flex-col gap-3" role="list">
         {filtered.map((a) => {
-          const isNew = mounted && Date.now() - new Date(a.created_at).getTime() <= 5000
+          const isNew =
+            ready && Date.now() - new Date(a.created_at).getTime() <= 5000
           return (
-            <AttendeeCard
-              key={`${a.name}-${a.created_at}`}
-              attendee={a}
-              isNew={isNew}
-            />
+            <div role="listitem" key={`${a.name}-${a.created_at}`}>
+              <AttendeeCard attendee={a} isNew={isNew} />
+            </div>
           )
         })}
+
         {filtered.length === 0 && (
           <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border py-16">
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-muted-foreground" aria-hidden="true">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-muted-foreground"
+                aria-hidden="true"
+              >
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                 <circle cx="9" cy="7" r="4" />
                 <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -273,7 +326,7 @@ export function RoomBoard() {
               </svg>
             </div>
             <p className="text-sm text-muted-foreground">
-              {search || activeFilter !== "All"
+              {search || filter !== "All"
                 ? "No attendees match your filters."
                 : "No attendees yet. Be the first to join."}
             </p>

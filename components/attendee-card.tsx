@@ -26,7 +26,8 @@ export function AttendeeCard({
   attendee: Attendee
   isNew: boolean
 }) {
-  const subtitle = [attendee.title, attendee.company].filter(Boolean).join(" at ") || null
+  const subtitle =
+    [attendee.title, attendee.company].filter(Boolean).join(" at ") || null
   const initials = attendee.name
     .split(" ")
     .map((w) => w.charAt(0))
@@ -35,40 +36,54 @@ export function AttendeeCard({
     .toUpperCase()
 
   return (
-    <div
-      className={`group rounded-2xl border border-border bg-card p-4 transition-all hover:border-border hover:bg-secondary/50 ${isNew ? "just-joined card-enter" : ""}`}
+    <article
+      className={`rounded-2xl border border-border bg-card p-4 transition-colors hover:bg-secondary/40 ${
+        isNew ? "just-joined card-enter" : ""
+      }`}
+      aria-label={`${attendee.name}, ${
+        COMFORT_LABELS[attendee.ai_comfort_level] ?? ""
+      }`}
     >
       <div className="flex items-start gap-3.5">
         {/* Avatar */}
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-semibold text-accent-foreground">
+        <div
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent text-[13px] font-semibold text-accent-foreground"
+          aria-hidden="true"
+        >
           {initials}
         </div>
 
         {/* Info */}
-        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+        <div className="flex min-w-0 flex-1 flex-col">
           <div className="flex items-center gap-2">
-            <span className="truncate text-[15px] font-semibold leading-tight">{attendee.name}</span>
+            <span className="truncate text-[15px] font-semibold leading-snug">
+              {attendee.name}
+            </span>
             {attendee.linkedin_url && (
               <a
                 href={attendee.linkedin_url}
                 target="_blank"
                 rel="noreferrer"
                 aria-label={`${attendee.name} on LinkedIn`}
-                className="focus-ring shrink-0 rounded-sm text-muted-foreground transition-colors hover:text-primary"
+                className="focus-ring shrink-0 rounded-sm text-muted-foreground transition-colors hover:text-foreground"
               >
                 <LinkedinIcon size={14} />
               </a>
             )}
           </div>
+
           {subtitle && (
-            <span className="truncate text-sm text-muted-foreground">{subtitle}</span>
+            <span className="mt-0.5 truncate text-sm leading-snug text-muted-foreground">
+              {subtitle}
+            </span>
           )}
 
-          {/* Comfort bar inline */}
-          <div className="mt-1.5 flex items-center gap-2">
+          {/* Comfort */}
+          <div className="mt-2 flex items-center gap-2.5">
             <ComfortDots level={attendee.ai_comfort_level} />
-            <span className="text-xs text-muted-foreground">
-              {COMFORT_LABELS[attendee.ai_comfort_level] ?? `Level ${attendee.ai_comfort_level}`}
+            <span className="text-xs font-medium text-muted-foreground">
+              {COMFORT_LABELS[attendee.ai_comfort_level] ??
+                `Level ${attendee.ai_comfort_level}`}
             </span>
           </div>
         </div>
@@ -76,17 +91,17 @@ export function AttendeeCard({
 
       {/* Help tags */}
       {attendee.help_offered.length > 0 && (
-        <div className="mt-3 flex flex-wrap gap-1.5 pl-[54px]">
+        <div className="mt-3 flex flex-wrap gap-1.5 pl-[58px]">
           {attendee.help_offered.map((tag) => (
             <span
               key={tag}
-              className="rounded-full bg-accent px-2.5 py-0.5 text-[11px] font-medium text-accent-foreground"
+              className="rounded-full bg-accent px-2.5 py-[3px] text-[11px] font-medium leading-none text-accent-foreground"
             >
               {tag}
             </span>
           ))}
         </div>
       )}
-    </div>
+    </article>
   )
 }

@@ -17,66 +17,66 @@ const HELP_OPTIONS = [
   "Other",
 ] as const
 
-function normalizeOptionalText(value: FormDataEntryValue | null) {
+function normalize(value: FormDataEntryValue | null) {
   if (typeof value !== "string") return null
-  const trimmed = value.trim()
-  return trimmed.length > 0 ? trimmed : null
+  const t = value.trim()
+  return t.length > 0 ? t : null
 }
 
-function toStringArray(values: FormDataEntryValue[]) {
-  return values.filter((v): v is string => typeof v === "string")
-}
+type Status =
+  | { type: "idle" | "submitting" }
+  | { type: "success" | "error"; message: string }
 
-type Status = {
-  type: "idle" | "submitting" | "success" | "error"
-  message?: string
-}
-
+/* ------------------------------------------------------------------ */
+/* Form                                                                */
+/* ------------------------------------------------------------------ */
 export function SignupForm() {
   const [status, setStatus] = useState<Status>({ type: "idle" })
   const [helpNeeded, setHelpNeeded] = useState<string[]>([])
   const [helpOffered, setHelpOffered] = useState<string[]>([])
 
-  function toggleChip(list: string[], setList: (v: string[]) => void, value: string) {
-    setList(list.includes(value) ? list.filter((v) => v !== value) : [...list, value])
+  function toggle(
+    list: string[],
+    setter: (v: string[]) => void,
+    value: string
+  ) {
+    setter(
+      list.includes(value) ? list.filter((v) => v !== value) : [...list, value]
+    )
   }
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault()
 
     if (!hasSupabaseBrowserEnv()) {
       setStatus({
         type: "error",
-        message:
-          "Signup is temporarily unavailable. Environment not configured.",
+        message: "Signup is temporarily unavailable. Environment not configured.",
       })
       return
     }
 
-    const form = event.currentTarget
-    const formData = new FormData(form)
-    const honeypot =
-      typeof formData.get("honeypot") === "string"
-        ? String(formData.get("honeypot")).trim()
-        : ""
+    const fd = new FormData(e.currentTarget)
 
-    if (honeypot.length > 0) {
+    /* Honeypot */
+    const hp = String(fd.get("honeypot") ?? "").trim()
+    if (hp.length > 0) {
       setStatus({
         type: "success",
         message: "Thanks for joining! You should appear on the directory shortly.",
       })
-      form.reset()
+      e.currentTarget.reset()
       return
     }
 
     const payload = {
-      name: String(formData.get("name") ?? "").trim(),
-      email: String(formData.get("email") ?? "").trim(),
-      linkedin_url: normalizeOptionalText(formData.get("linkedin_url")),
-      title: normalizeOptionalText(formData.get("title")),
-      company: normalizeOptionalText(formData.get("company")),
-      display_title_company: formData.get("display_title_company") === "on",
-      ai_comfort_level: Number(formData.get("ai_comfort_level") ?? 3),
+      name: String(fd.get("name") ?? "").trim(),
+      email: String(fd.get("email") ?? "").trim(),
+      linkedin_url: normalize(fd.get("linkedin_url")),
+      title: normalize(fd.get("title")),
+      company: normalize(fd.get("company")),
+      display_title_company: fd.get("display_title_company") === "on",
+      ai_comfort_level: Number(fd.get("ai_comfort_level") ?? 3),
       help_needed: helpNeeded,
       help_offered: helpOffered,
       honeypot: "",
@@ -91,25 +91,21 @@ export function SignupForm() {
       const { error } = await supabase.from("attendees").insert(payload)
 
       if (error) {
-        if (error.code === "23505") {
-          setStatus({
-            type: "error",
-            message: "This email has already been used to sign up.",
-          })
-          return
-        }
         setStatus({
           type: "error",
-          message: "Something went wrong. Please try again.",
+          message:
+            error.code === "23505"
+              ? "This email has already been used to sign up."
+              : "Something went wrong. Please try again.",
         })
         return
       }
 
       setStatus({
         type: "success",
-        message: "You're in! You should appear on the directory shortly.",
+        message: "You should appear on the directory shortly.",
       })
-      form.reset()
+      e.currentTarget.reset()
       setHelpNeeded([])
       setHelpOffered([])
     } catch {
@@ -120,20 +116,34 @@ export function SignupForm() {
     }
   }
 
+  /* ---- Success ---- */
   if (status.type === "success") {
     return (
-      <div className="mx-auto max-w-lg px-5 py-16 text-center md:py-24">
-        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-accent">
-          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary" aria-hidden="true">
+      <div className="mx-auto flex max-w-lg flex-col items-center px-5 py-20 text-center md:py-28">
+        <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[hsl(var(--success)/0.15)]">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="hsl(var(--success))"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
             <polyline points="22 4 12 14.01 9 11.01" />
           </svg>
         </div>
-        <h2 className="text-2xl font-bold tracking-tight">{"You're in!"}</h2>
-        <p className="mt-2 text-muted-foreground">{status.message}</p>
+        <h2 className="text-2xl font-bold tracking-tight">
+          {"You're in."}
+        </h2>
+        <p className="mt-2 text-sm text-muted-foreground">{status.message}</p>
         <Link
           href="/room"
-          className="mt-6 inline-flex h-12 items-center justify-center rounded-full bg-primary px-7 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:brightness-110 active:scale-[0.98]"
+          className="focus-ring mt-8 inline-flex h-12 items-center justify-center rounded-full bg-primary px-8 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:brightness-110 active:scale-[0.98]"
         >
           View Directory
         </Link>
@@ -141,141 +151,214 @@ export function SignupForm() {
     )
   }
 
+  /* ---- Form ---- */
   return (
-    <div className="mx-auto max-w-lg px-5 py-8 md:py-12">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Join the room</h1>
-        <p className="mt-2 text-[15px] text-muted-foreground">
-          Share your signal so others know who to connect with. Your email stays private.
+    <div className="mx-auto max-w-lg px-5 py-8 md:py-14">
+      <div className="mb-10">
+        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+          Join Dallas AI Direct
+        </h1>
+        <p className="mt-2 text-[15px] leading-relaxed text-muted-foreground">
+          Share your signal so others know who to connect with.
+          Your email stays private.
         </p>
       </div>
 
-      <form className="flex flex-col gap-7" onSubmit={handleSubmit}>
+      <form className="flex flex-col gap-8" onSubmit={handleSubmit} noValidate>
         {/* Honeypot */}
         <div aria-hidden="true" className="absolute -left-[9999px]">
           <label htmlFor="website">Website</label>
-          <input id="website" name="honeypot" type="text" tabIndex={-1} autoComplete="off" />
+          <input
+            id="website"
+            name="honeypot"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+          />
         </div>
 
         {/* Name */}
-        <FormField label="Name" required>
-          <input id="name" name="name" type="text" placeholder="Your full name" required className="form-input" />
-        </FormField>
+        <Field label="Name" required>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            required
+            placeholder="Your full name"
+            className="form-input"
+          />
+        </Field>
 
         {/* Email */}
-        <FormField label="Email" hint="Never displayed publicly" required>
-          <input id="email" name="email" type="email" placeholder="you@company.com" required className="form-input" />
-        </FormField>
+        <Field label="Email" hint="Never displayed publicly" required>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            placeholder="you@company.com"
+            className="form-input"
+          />
+        </Field>
 
         {/* AI Comfort Level */}
-        <FormField label="AI Comfort Level" required>
-          <div className="grid grid-cols-5 gap-2">
-            {[
-              { v: 1, l: "1", sub: "Exploring" },
-              { v: 2, l: "2", sub: "Learning" },
-              { v: 3, l: "3", sub: "Building" },
-              { v: 4, l: "4", sub: "Shipping" },
-              { v: 5, l: "5", sub: "Leading" },
-            ].map((opt) => (
-              <label key={opt.v} className="group cursor-pointer">
-                <input type="radio" name="ai_comfort_level" value={opt.v} defaultChecked={opt.v === 3} className="peer sr-only" />
-                <div className="flex flex-col items-center gap-1 rounded-xl border border-border bg-card p-3 text-center transition-all peer-checked:border-primary/40 peer-checked:bg-accent peer-checked:text-accent-foreground hover:bg-secondary active:scale-95">
-                  <span className="text-lg font-bold">{opt.l}</span>
-                  <span className="text-[10px] text-muted-foreground peer-checked:text-accent-foreground">{opt.sub}</span>
-                </div>
-              </label>
-            ))}
-          </div>
-        </FormField>
+        <Field label="AI Comfort Level" required>
+          <fieldset>
+            <legend className="sr-only">Select your AI comfort level</legend>
+            <div className="grid grid-cols-5 gap-2">
+              {[
+                { v: 1, sub: "Exploring" },
+                { v: 2, sub: "Learning" },
+                { v: 3, sub: "Building" },
+                { v: 4, sub: "Shipping" },
+                { v: 5, sub: "Leading" },
+              ].map((opt) => (
+                <label key={opt.v} className="group cursor-pointer">
+                  <input
+                    type="radio"
+                    name="ai_comfort_level"
+                    value={opt.v}
+                    defaultChecked={opt.v === 3}
+                    className="peer sr-only"
+                  />
+                  <div className="flex flex-col items-center gap-1 rounded-xl border border-border bg-card p-3 text-center transition-all peer-checked:border-primary peer-checked:bg-accent peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background hover:bg-secondary active:scale-[0.97]">
+                    <span className="text-lg font-bold leading-none">
+                      {opt.v}
+                    </span>
+                    <span className="text-[10px] font-medium text-muted-foreground">
+                      {opt.sub}
+                    </span>
+                  </div>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        </Field>
 
-        {/* Help needed - pill chips */}
-        <FormField label="What help do you need?">
-          <div className="flex flex-wrap gap-2" role="group" aria-label="Help needed options">
+        {/* Help needed */}
+        <Field label="What help do you need?">
+          <div
+            className="flex flex-wrap gap-2"
+            role="group"
+            aria-label="Help needed"
+          >
             {HELP_OPTIONS.map((opt) => (
               <button
                 key={opt}
                 type="button"
                 aria-pressed={helpNeeded.includes(opt)}
-                onClick={() => toggleChip(helpNeeded, setHelpNeeded, opt)}
                 data-active={helpNeeded.includes(opt) ? "true" : "false"}
-                className="filter-chip"
+                onClick={() => toggle(helpNeeded, setHelpNeeded, opt)}
+                className="chip"
               >
                 {opt}
               </button>
             ))}
           </div>
-        </FormField>
+        </Field>
 
-        {/* Help offered - pill chips */}
-        <FormField label="What help can you offer?">
-          <div className="flex flex-wrap gap-2" role="group" aria-label="Help offered options">
+        {/* Help offered */}
+        <Field label="What help can you offer?">
+          <div
+            className="flex flex-wrap gap-2"
+            role="group"
+            aria-label="Help offered"
+          >
             {HELP_OPTIONS.map((opt) => (
               <button
                 key={opt}
                 type="button"
                 aria-pressed={helpOffered.includes(opt)}
-                onClick={() => toggleChip(helpOffered, setHelpOffered, opt)}
                 data-active={helpOffered.includes(opt) ? "true" : "false"}
-                className="filter-chip"
+                onClick={() => toggle(helpOffered, setHelpOffered, opt)}
+                className="chip"
               >
                 {opt}
               </button>
             ))}
           </div>
-        </FormField>
+        </Field>
 
-        <div className="h-px bg-border" />
+        {/* Divider */}
+        <div className="h-px bg-border" role="separator" />
 
-        {/* Optional fields */}
-        <div className="flex flex-col gap-5">
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Optional</p>
+        {/* Optional section */}
+        <div className="flex flex-col gap-6">
+          <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+            Optional
+          </p>
 
-          <FormField label="LinkedIn">
-            <input id="linkedin" name="linkedin_url" type="url" placeholder="https://linkedin.com/in/..." className="form-input" />
-          </FormField>
+          <Field label="LinkedIn">
+            <input
+              id="linkedin"
+              name="linkedin_url"
+              type="url"
+              placeholder="https://linkedin.com/in/..."
+              className="form-input"
+            />
+          </Field>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <FormField label="Title">
-              <input id="title" name="title" type="text" placeholder="Your role" className="form-input" />
-            </FormField>
-            <FormField label="Company">
-              <input id="company" name="company" type="text" placeholder="Your company" className="form-input" />
-            </FormField>
+            <Field label="Title">
+              <input
+                id="title"
+                name="title"
+                type="text"
+                placeholder="Your role"
+                className="form-input"
+              />
+            </Field>
+            <Field label="Company">
+              <input
+                id="company"
+                name="company"
+                type="text"
+                placeholder="Your company"
+                className="form-input"
+              />
+            </Field>
           </div>
 
-          {/* Display consent */}
-          <label className="flex items-center gap-3 cursor-pointer group">
-            <div className="relative">
-              <input id="displayTitleCompany" name="display_title_company" type="checkbox" defaultChecked={false} className="peer sr-only" />
-              <div className="h-6 w-11 rounded-full border border-border bg-secondary transition-colors peer-checked:border-primary/40 peer-checked:bg-primary" />
-              <div className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-foreground shadow transition-transform peer-checked:translate-x-5 peer-checked:bg-primary-foreground" />
-            </div>
-            <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">Show title & company on directory</span>
+          {/* Display consent toggle */}
+          <label className="group flex cursor-pointer items-center gap-3">
+            <span className="relative inline-flex">
+              <input
+                name="display_title_company"
+                type="checkbox"
+                defaultChecked={false}
+                className="peer sr-only"
+              />
+              <span className="h-6 w-11 rounded-full border border-border bg-secondary transition-colors peer-checked:border-primary peer-checked:bg-primary peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background" />
+              <span className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-foreground shadow-sm transition-transform peer-checked:translate-x-5 peer-checked:bg-primary-foreground" />
+            </span>
+            <span className="text-sm text-muted-foreground transition-colors group-hover:text-foreground">
+              Show title & company in directory
+            </span>
           </label>
         </div>
 
-        {/* Status message */}
+        {/* Error */}
         {status.type === "error" && (
           <div
             role="alert"
-            className="rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+            className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
           >
             {status.message}
           </div>
         )}
 
-        {/* Submit */}
+        {/* Actions */}
         <div className="flex flex-col gap-3 pt-2 sm:flex-row">
           <button
             type="submit"
             disabled={status.type === "submitting"}
-            className="focus-ring inline-flex h-12 flex-1 items-center justify-center rounded-full bg-primary px-7 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:shadow-xl hover:shadow-primary/30 hover:brightness-110 disabled:opacity-50 active:scale-[0.98]"
+            className="focus-ring inline-flex h-12 flex-1 items-center justify-center rounded-full bg-primary px-8 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:shadow-xl hover:shadow-primary/30 hover:brightness-110 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]"
           >
-            {status.type === "submitting" ? "Joining..." : "Join Event"}
+            {status.type === "submitting" ? "Joining\u2026" : "Join Event"}
           </button>
           <Link
             href="/room"
-            className="focus-ring inline-flex h-12 items-center justify-center rounded-full border border-border bg-card px-7 text-sm font-semibold text-card-foreground transition-all hover:bg-secondary active:scale-[0.98]"
+            className="focus-ring inline-flex h-12 items-center justify-center rounded-full border border-border px-8 text-sm font-semibold transition-colors hover:bg-secondary active:scale-[0.98]"
           >
             View Directory
           </Link>
@@ -285,7 +368,10 @@ export function SignupForm() {
   )
 }
 
-function FormField({
+/* ------------------------------------------------------------------ */
+/* Sub-components                                                      */
+/* ------------------------------------------------------------------ */
+function Field({
   label,
   hint,
   required,
@@ -298,12 +384,16 @@ function FormField({
 }) {
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex items-baseline gap-1.5">
-        <label className="text-sm font-medium">{label}</label>
-        {!required && <span className="text-xs text-muted-foreground">optional</span>}
+      <div className="flex items-baseline gap-2">
+        <label className="text-sm font-medium text-foreground">{label}</label>
+        {!required && (
+          <span className="text-[11px] text-muted-foreground">optional</span>
+        )}
       </div>
       {children}
-      {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+      {hint && (
+        <p className="text-xs text-muted-foreground">{hint}</p>
+      )}
     </div>
   )
 }

@@ -13,17 +13,26 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: "#0f0f11",
+  themeColor: "#0d0d0d",
   width: "device-width",
   initialScale: 1,
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`dark ${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
-      <body className="min-h-screen font-sans">
+    <html
+      lang="en"
+      className={`dark ${GeistSans.variable} ${GeistMono.variable}`}
+      suppressHydrationWarning
+    >
+      <body className="flex min-h-screen flex-col font-sans">
+        <a href="#main-content" className="skip-link">
+          Skip to content
+        </a>
         <SharedHeader />
-        <main>{children}</main>
+        <main id="main-content" className="flex-1">
+          {children}
+        </main>
         <SharedFooter />
       </body>
     </html>
