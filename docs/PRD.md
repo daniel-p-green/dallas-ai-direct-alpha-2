@@ -1,22 +1,48 @@
-# Product Requirements Document
+# Product requirements document
 
 ## Problem
-Organizers need real-time attendee visibility without relying on paid directory access or exposing attendee emails.
 
-## Product Scope (Alpha)
-- QR signup flow.
-- Attendee insertion into secure table.
-- Public directory read via `attendees_public`.
-- Metrics: attendee count and AI comfort distribution.
+Organizers need real-time attendee visibility without paid directory lock-in
+or email exposure risk.
 
-## Functional Requirements
-1. System stores fields: `name`, `linkedin_url`, `email`, `ai_comfort_level`, `help_needed`, `help_offered`.
-2. System treats `email` as sensitive.
-3. Public UI reads from `attendees_public` only.
-4. System inserts attendee records into `attendees`.
-5. System displays aggregate metrics without exposing private data.
+## Product scope (alpha)
 
-## Non-Functional Requirements
+- QR signup flow during talk Q and A.
+- Attendee insert path to secure base table.
+- Public directory reads from `attendees_public` only.
+- Aggregates for room count and AI comfort distribution.
+
+## Hero moment requirements
+
+- Attendee completes signup in about 30 seconds.
+- Room board updates within 5 seconds.
+- Board shows only safe public fields.
+- Email never appears in public output.
+
+## Functional requirements
+
+1. System stores required fields: `name`, `email`.
+2. System stores optional fields: `linkedin_url`, `title`, `company`.
+3. System stores required structured fields:
+   - `ai_comfort_level` as integer `1..5`
+   - `help_needed` as `text[]`
+   - `help_offered` as `text[]`
+4. System stores optional free-text fields:
+   - `other_help_needed`
+   - `other_help_offered`
+5. System treats `email` as sensitive.
+6. Public UI reads from `attendees_public` only.
+7. Insert path writes to `attendees`.
+8. System displays aggregate metrics without private fields.
+
+## Non-functional requirements
+
 - Security-first backend controls with RLS.
 - Demo-ready reliability under moderate live traffic.
-- Auditability of policy behavior.
+- Auditability of policy behavior and test evidence.
+
+## Skills used
+
+- Scanned `~/.openclaw/skills` and found `antfarm-workflows/SKILL.md`.
+- No PRD-specific skill exists there today.
+- Applied repository requirements standards directly.
