@@ -50,3 +50,8 @@ Started: 2026-02-12 03:02 America/Chicago
 - No code changes were required because existing US-001 implementation already satisfies route, banner, and footer acceptance criteria.
 - **Learnings:** Retry runs may be validation-only when prior commits already meet story-level requirements; keep evidence current via deterministic test output.
 ---
+## 2026-02-12 04:33 America/Chicago - US-001 retry: strengthen app-shell acceptance coverage
+- Added explicit app-shell test assertion for shared header title/subtitle rendering in `tests/app-shell.test.mjs`.
+- Re-ran `npm run typecheck` and `npm test` to verify story acceptance checks remain green.
+- **Learnings:** For App Router shell stories, direct source assertions in `node:test` are a fast way to enforce exact banner/header/footer copy contracts.
+---

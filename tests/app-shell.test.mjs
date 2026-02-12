@@ -31,6 +31,13 @@ test('shared layout renders environment banner text', () => {
   assert.match(layout, /PUBLIC VIEW SAFE/);
 });
 
+test('shared header renders title and subtitle', () => {
+  const layout = read('app/layout.tsx');
+
+  assert.match(layout, /Dallas AI Direct Alpha/);
+  assert.match(layout, /Fast, private attendee signal for in-room demo moments\./);
+});
+
 test('shared footer renders required privacy text', () => {
   const layout = read('app/layout.tsx');
 
