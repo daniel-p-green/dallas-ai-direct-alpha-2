@@ -11,6 +11,14 @@ export type Attendee = {
   created_at: string
 }
 
+const COMFORT_LABELS: Record<number, string> = {
+  1: "Exploring",
+  2: "Learning",
+  3: "Building",
+  4: "Shipping",
+  5: "Leading",
+}
+
 export function AttendeeCard({
   attendee,
   isNew,
@@ -19,59 +27,65 @@ export function AttendeeCard({
   isNew: boolean
 }) {
   const subtitle = [attendee.title, attendee.company].filter(Boolean).join(" at ") || null
+  const initials = attendee.name
+    .split(" ")
+    .map((w) => w.charAt(0))
+    .join("")
+    .slice(0, 2)
+    .toUpperCase()
 
   return (
     <div
-      className={`flex items-center gap-4 border-b border-border px-1 py-3 last:border-b-0 ${isNew ? "just-joined" : ""}`}
+      className={`group rounded-2xl border border-border bg-card p-4 transition-all hover:border-border hover:bg-secondary/50 ${isNew ? "just-joined card-enter" : ""}`}
     >
-      {/* Avatar initial */}
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-medium text-secondary-foreground">
-        {attendee.name.charAt(0).toUpperCase()}
-      </div>
+      <div className="flex items-start gap-3.5">
+        {/* Avatar */}
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-semibold text-accent-foreground">
+          {initials}
+        </div>
 
-      {/* Name block */}
-      <div className="flex min-w-0 flex-1 flex-col">
-        <span className="truncate text-sm font-medium">{attendee.name}</span>
-        {subtitle && (
-          <span className="truncate text-xs text-muted-foreground">{subtitle}</span>
-        )}
+        {/* Info */}
+        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+          <div className="flex items-center gap-2">
+            <span className="truncate text-[15px] font-semibold leading-tight">{attendee.name}</span>
+            {attendee.linkedin_url && (
+              <a
+                href={attendee.linkedin_url}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`${attendee.name} on LinkedIn`}
+                className="shrink-0 text-muted-foreground transition-colors hover:text-primary"
+              >
+                <LinkedinIcon size={14} />
+              </a>
+            )}
+          </div>
+          {subtitle && (
+            <span className="truncate text-sm text-muted-foreground">{subtitle}</span>
+          )}
+
+          {/* Comfort bar inline */}
+          <div className="mt-1.5 flex items-center gap-2">
+            <ComfortDots level={attendee.ai_comfort_level} />
+            <span className="text-xs text-muted-foreground">
+              {COMFORT_LABELS[attendee.ai_comfort_level] ?? `Level ${attendee.ai_comfort_level}`}
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Help tags */}
-      <div className="hidden items-center gap-1 sm:flex">
-        {attendee.help_offered.slice(0, 2).map((tag) => (
-          <span
-            key={tag}
-            className="inline-flex rounded border border-border px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground"
-          >
-            {tag}
-          </span>
-        ))}
-        {attendee.help_offered.length > 2 && (
-          <span className="font-mono text-[10px] text-muted-foreground">
-            +{attendee.help_offered.length - 2}
-          </span>
-        )}
-      </div>
-
-      {/* Comfort */}
-      <div className="hidden shrink-0 md:block">
-        <ComfortDots level={attendee.ai_comfort_level} />
-      </div>
-
-      {/* LinkedIn */}
-      {attendee.linkedin_url ? (
-        <a
-          href={attendee.linkedin_url}
-          target="_blank"
-          rel="noreferrer"
-          aria-label={`${attendee.name} on LinkedIn`}
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <LinkedinIcon size={14} />
-        </a>
-      ) : (
-        <div className="h-7 w-7 shrink-0" aria-hidden="true" />
+      {attendee.help_offered.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-1.5 pl-[54px]">
+          {attendee.help_offered.map((tag) => (
+            <span
+              key={tag}
+              className="rounded-full bg-accent px-2.5 py-0.5 text-[11px] font-medium text-accent-foreground"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
       )}
     </div>
   )

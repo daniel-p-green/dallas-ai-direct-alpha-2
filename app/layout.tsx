@@ -7,13 +7,13 @@ import { SharedFooter } from "@/components/shared-footer"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "Room Board / Dallas AI",
+  title: "Dallas AI Direct",
   description:
-    "Real-time attendee visibility for Dallas AI events. Privacy-first design.",
+    "See who is in the room. Real-time attendee directory for Dallas AI events.",
 }
 
 export const viewport: Viewport = {
-  themeColor: "#0a0a0a",
+  themeColor: "#0f0f11",
   width: "device-width",
   initialScale: 1,
 }
@@ -23,9 +23,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en" className={`dark ${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
       <body className="min-h-screen font-sans">
         <SharedHeader />
-        <main className="mx-auto w-full max-w-[960px] px-6 py-8 md:py-12">
-          {children}
-        </main>
+        <main>{children}</main>
         <SharedFooter />
       </body>
     </html>

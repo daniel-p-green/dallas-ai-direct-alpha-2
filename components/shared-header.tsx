@@ -1,34 +1,45 @@
+"use client"
+
 import Link from "next/link"
 import Image from "next/image"
+import { usePathname } from "next/navigation"
 
 export function SharedHeader() {
+  const pathname = usePathname()
+
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">
-      <div className="mx-auto flex w-full max-w-[960px] items-center justify-between px-6 py-3">
-        <Link href="/" className="flex items-center gap-3">
+    <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
+      <div className="mx-auto flex w-full max-w-3xl items-center justify-between px-5 py-3.5">
+        <Link href="/" className="flex items-center gap-2.5">
           <Image
             src="/brand/dallas-ai-logo-white.png"
-            alt="Dallas AI"
-            width={120}
-            height={32}
+            alt="Dallas AI Direct"
+            width={100}
+            height={28}
             priority
-            className="h-6 w-auto"
+            className="h-5 w-auto"
           />
-          <span className="text-xs text-muted-foreground" aria-hidden="true">/</span>
-          <span className="text-sm font-medium tracking-tight">Room Board</span>
         </Link>
         <nav className="flex items-center gap-1">
           <Link
             href="/signup"
-            className="rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            className={`rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors ${
+              pathname === "/signup"
+                ? "bg-secondary text-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
           >
-            Sign Up
+            Join
           </Link>
           <Link
             href="/room"
-            className="rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            className={`rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors ${
+              pathname === "/room"
+                ? "bg-secondary text-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
           >
-            Board
+            Directory
           </Link>
         </nav>
       </div>

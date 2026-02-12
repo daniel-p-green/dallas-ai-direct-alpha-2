@@ -2,57 +2,59 @@ import Link from "next/link"
 
 export function HeroSection() {
   return (
-    <section className="flex flex-col items-center gap-10 py-16 text-center md:py-28">
-      <div className="inline-flex items-center rounded-full border border-border px-3 py-1">
-        <span className="font-mono text-xs text-muted-foreground">alpha preview</span>
-      </div>
+    <section className="relative flex flex-col items-center overflow-hidden px-5 pb-20 pt-24 text-center md:pb-28 md:pt-36">
+      {/* Subtle radial glow */}
+      <div
+        className="pointer-events-none absolute top-0 left-1/2 -z-10 h-[500px] w-[800px] -translate-x-1/2"
+        style={{
+          background: "radial-gradient(ellipse at center, hsl(217 91% 60% / 0.08) 0%, transparent 70%)",
+        }}
+        aria-hidden="true"
+      />
 
-      <div className="flex max-w-xl flex-col gap-5">
-        <h1 className="text-balance text-4xl font-semibold leading-[1.1] tracking-tight md:text-5xl">
-          See who is in the room.
-        </h1>
-        <p className="text-pretty text-base leading-relaxed text-muted-foreground">
-          Real-time attendee board for Dallas AI events. Scan the QR, join the room, connect with intent.
-        </p>
-      </div>
+      <p className="mb-6 rounded-full border border-border bg-secondary px-4 py-1.5 text-xs font-medium text-muted-foreground">
+        Dallas AI Events
+      </p>
 
-      <div className="flex items-center gap-3">
+      <h1 className="max-w-[14ch] text-balance text-5xl font-bold leading-[1.05] tracking-tight md:text-7xl">
+        See who is in the room.
+      </h1>
+
+      <p className="mt-5 max-w-md text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
+        Scan the QR code at the event, share your signal, and discover who you should be talking to.
+      </p>
+
+      <div className="mt-8 flex flex-col gap-3 sm:flex-row">
         <Link
           href="/signup"
-          className="inline-flex h-9 items-center justify-center rounded-md bg-foreground px-4 text-sm font-medium text-background transition-opacity hover:opacity-80"
+          className="inline-flex h-12 items-center justify-center rounded-full bg-primary px-7 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:shadow-xl hover:shadow-primary/30 hover:brightness-110 active:scale-[0.98]"
         >
-          Join Event
+          Join the Event
         </Link>
         <Link
           href="/room"
-          className="inline-flex h-9 items-center justify-center rounded-md border border-border px-4 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
+          className="inline-flex h-12 items-center justify-center rounded-full border border-border bg-card px-7 text-sm font-semibold text-card-foreground transition-all hover:bg-secondary active:scale-[0.98]"
         >
-          View Board
+          View Directory
         </Link>
       </div>
 
-      <div className="grid w-full max-w-lg grid-cols-3 gap-px overflow-hidden rounded-lg border border-border bg-border">
-        <div className="flex flex-col items-center gap-1 bg-background px-4 py-5">
-          <span className="font-mono text-2xl font-semibold tracking-tight">5s</span>
-          <span className="text-xs text-muted-foreground">Polling interval</span>
-        </div>
-        <div className="flex flex-col items-center gap-1 bg-background px-4 py-5">
-          <span className="font-mono text-2xl font-semibold tracking-tight">0</span>
-          <span className="text-xs text-muted-foreground">Emails exposed</span>
-        </div>
-        <div className="flex flex-col items-center gap-1 bg-background px-4 py-5">
-          <span className="font-mono text-2xl font-semibold tracking-tight">RLS</span>
-          <span className="text-xs text-muted-foreground">Privacy boundary</span>
-        </div>
+      {/* Feature pills */}
+      <div className="mt-14 flex flex-wrap justify-center gap-2">
+        {[
+          { label: "Real-time", desc: "5s refresh" },
+          { label: "Privacy-first", desc: "Email stays hidden" },
+          { label: "Intent signals", desc: "Help offered & needed" },
+        ].map((f) => (
+          <div
+            key={f.label}
+            className="flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2"
+          >
+            <span className="text-xs font-medium text-foreground">{f.label}</span>
+            <span className="text-xs text-muted-foreground">{f.desc}</span>
+          </div>
+        ))}
       </div>
-
-      <p className="flex items-center gap-2 text-xs text-muted-foreground">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-        </svg>
-        Privacy-first. Email never leaves the database boundary.
-      </p>
     </section>
   )
 }

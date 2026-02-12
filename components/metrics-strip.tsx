@@ -14,19 +14,19 @@ export function MetricsStrip({ attendees }: { attendees: Attendee[] }) {
       : 0
 
   return (
-    <div className="grid grid-cols-3 gap-px overflow-hidden rounded-lg border border-border bg-border">
-      <div className="flex flex-col gap-0.5 bg-background px-4 py-3">
-        <span className="font-mono text-xl font-semibold tracking-tight">{count}</span>
-        <span className="text-[11px] text-muted-foreground">Attendees</span>
-      </div>
-      <div className="flex flex-col gap-0.5 bg-background px-4 py-3">
-        <span className="font-mono text-xl font-semibold tracking-tight">{avgComfort}</span>
-        <span className="text-[11px] text-muted-foreground">Avg Comfort</span>
-      </div>
-      <div className="flex flex-col gap-0.5 bg-background px-4 py-3">
-        <span className="font-mono text-xl font-semibold tracking-tight">{highPct}%</span>
-        <span className="text-[11px] text-muted-foreground">{"Comfort 4+"}</span>
-      </div>
+    <div className="flex gap-2 overflow-x-auto pb-1">
+      <MetricCard value={String(count)} label="Attendees" />
+      <MetricCard value={avgComfort} label="Avg Comfort" />
+      <MetricCard value={`${highPct}%`} label="Advanced (4+)" />
+    </div>
+  )
+}
+
+function MetricCard({ value, label }: { value: string; label: string }) {
+  return (
+    <div className="flex min-w-[120px] flex-1 flex-col gap-1 rounded-2xl border border-border bg-card p-4">
+      <span className="text-2xl font-bold tracking-tight">{value}</span>
+      <span className="text-xs text-muted-foreground">{label}</span>
     </div>
   )
 }
