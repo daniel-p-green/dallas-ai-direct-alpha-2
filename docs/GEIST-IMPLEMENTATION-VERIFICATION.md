@@ -34,6 +34,6 @@ Apply hydration warning patch only if it can be done without scope expansion.
 
 ## Skills used
 
-- Source: `~/.openclaw/skills`
+- Source: `~/.codex/skills`
 - Applied: `web-design-guidelines`, `frontend-design`, `ui-ux-pro-max`
 - Notes: Used as evaluation lenses for style system and accessibility readiness.

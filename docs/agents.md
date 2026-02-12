@@ -24,7 +24,7 @@ Maintain product, architecture, security, and roadmap documentation for the alph
 
 ## Skills Usage Instructions
 
-- Skills directory: `~/.openclaw/skills`.
+- Skills directory: `~/.codex/skills`.
 - Scan skill files first and choose the smallest relevant set.
 - Add a `Skills used` footer with filenames in modified docs when it improves auditability.
 

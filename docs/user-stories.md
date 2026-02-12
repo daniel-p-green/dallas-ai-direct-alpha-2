@@ -7,6 +7,6 @@
 
 ## Skills used
 
-- Scanned `~/.openclaw/skills` and found `antfarm-workflows/SKILL.md`.
+- Scanned `~/.codex/skills` and found `antfarm-workflows/SKILL.md`.
 - No user-story-specific skill exists there today.
 - Applied repository story documentation standards directly.

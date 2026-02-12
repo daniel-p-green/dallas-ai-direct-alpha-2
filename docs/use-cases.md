@@ -9,6 +9,6 @@
 
 ## Skills used
 
-- Scanned `~/.openclaw/skills` and found `antfarm-workflows/SKILL.md`.
+- Scanned `~/.codex/skills` and found `antfarm-workflows/SKILL.md`.
 - No use-case-specific skill exists there today.
 - Applied repository use-case documentation standards directly.

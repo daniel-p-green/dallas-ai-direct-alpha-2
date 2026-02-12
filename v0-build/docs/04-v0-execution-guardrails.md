@@ -45,5 +45,5 @@ Use this order from `v0-build/prompts/`:
 
 ## Skills used
 
-- Source scan attempted: `~/.openclaw/skills` (directory not present in current environment)
+- Source scan attempted: `~/.codex/skills` (directory not present in current environment)
 - Applied: repository root standards from `agents.md`

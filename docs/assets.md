@@ -57,6 +57,6 @@ It does not claim official endorsement by Vercel or Geist.
 
 ## Skills used
 
-- Source scan attempted: `~/.openclaw/skills` (directory not present in current environment)
+- Source scan attempted: `~/.codex/skills` (directory not present in current environment)
 - Applied: repository `agents.md` standards and testable requirement style
 - Notes: Added first-party Dallas AI logo inventory and placement constraints.

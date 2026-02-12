@@ -13,6 +13,6 @@
 
 ## Skills used
 
-- Scanned `~/.openclaw/skills` and found `antfarm-workflows/SKILL.md`.
+- Scanned `~/.codex/skills` and found `antfarm-workflows/SKILL.md`.
 - No JTBD-specific skill exists there today.
 - Applied repository JTBD documentation standards directly.

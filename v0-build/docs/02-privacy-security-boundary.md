@@ -37,5 +37,5 @@ Enforce privacy and access control in Supabase, then reflect that boundary in UI
 
 ## Skills used
 
-- Source scan attempted: `~/.openclaw/skills` (directory not present in current environment)
+- Source scan attempted: `~/.codex/skills` (directory not present in current environment)
 - Applied: repository root standards from `agents.md`

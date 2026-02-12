@@ -74,6 +74,6 @@ Fail any privacy boundary check and treat the run as automatic no-go.
 
 ## Skills used
 
-- Scanned `~/.openclaw/skills` and found `antfarm-workflows/SKILL.md`.
+- Scanned `~/.codex/skills` and found `antfarm-workflows/SKILL.md`.
 - No dedicated security/threat-model skill exists there today.
 - Applied repository security standards directly.

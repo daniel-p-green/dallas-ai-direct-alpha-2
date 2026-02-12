@@ -25,7 +25,7 @@ Control stepwise v0 execution for Dallas AI Direct Alpha with deterministic safe
 
 ## Skills usage instructions
 
-- Skills directory: `~/.openclaw/skills`.
+- Skills directory: `~/.codex/skills`.
 - Use `webapp-testing` and `verification-before-completion` for execution safety.
 - Use design skills only for UI polish within scope.
 

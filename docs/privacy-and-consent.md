@@ -49,6 +49,6 @@ Directory reads must come from `attendees_public` only.
 
 ## Skills used
 
-- Scanned `~/.openclaw/skills` and found `antfarm-workflows/SKILL.md`.
+- Scanned `~/.codex/skills` and found `antfarm-workflows/SKILL.md`.
 - No privacy-specific skill exists there today, so this file applies
   repository privacy standards directly.

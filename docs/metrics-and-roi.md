@@ -18,6 +18,6 @@
 
 ## Skills used
 
-- Scanned `~/.openclaw/skills` and found `antfarm-workflows/SKILL.md`.
+- Scanned `~/.codex/skills` and found `antfarm-workflows/SKILL.md`.
 - No ROI/metrics-specific skill exists there today.
 - Applied repository metrics documentation standards directly.

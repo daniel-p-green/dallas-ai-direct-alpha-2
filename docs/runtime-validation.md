@@ -48,6 +48,6 @@ Use `docs/PRE-DEMO-COMMAND-CARD.md` as the execution order for pre-demo checks.
 
 ## Skills used
 
-- Source: `~/.openclaw/skills`
+- Source: `~/.codex/skills`
 - Applied: `webapp-testing`, `verification-before-completion`
 - Notes: Used for runtime check structure and release gate clarity.

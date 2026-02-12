@@ -26,7 +26,7 @@ Define deterministic prompt assets for generating and refining the demo UI witho
 
 ## Skills usage instructions
 
-- Skills directory: `~/.openclaw/skills`.
+- Skills directory: `~/.codex/skills`.
 - Prefer `web-design-guidelines`, `frontend-design`, and `webapp-testing` for prompt quality.
 - Apply the smallest relevant skill set.
 - Add `Skills used` sections when creating major prompt orchestration docs.

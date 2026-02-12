@@ -34,6 +34,6 @@
 
 ## Skills used
 
-- Scanned `~/.openclaw/skills` and found `antfarm-workflows/SKILL.md`.
+- Scanned `~/.codex/skills` and found `antfarm-workflows/SKILL.md`.
 - No test/policy-specific skill exists there today, so this file applies
   repository checklist standards directly.

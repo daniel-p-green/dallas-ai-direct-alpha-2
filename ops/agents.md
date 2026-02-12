@@ -23,7 +23,7 @@ Provide operational checklists and incident response guidance for alpha deployme
 
 ## Skills Usage Instructions
 
-- Skills directory: `~/.openclaw/skills`.
+- Skills directory: `~/.codex/skills`.
 - Scan for `runbook`, `demo`, `threat`, and `repo` skills before edits.
 - Apply the smallest relevant set and add `Skills used` footer when helpful.
 

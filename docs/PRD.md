@@ -45,6 +45,6 @@ or email exposure risk.
 
 ## Skills used
 
-- Scanned `~/.openclaw/skills` and found `antfarm-workflows/SKILL.md`.
+- Scanned `~/.codex/skills` and found `antfarm-workflows/SKILL.md`.
 - No PRD-specific skill exists there today.
 - Applied repository requirements standards directly.

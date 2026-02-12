@@ -67,6 +67,6 @@ public-safe view prevent email exposure even if the front end breaks.
 
 ## Skills used
 
-- Scanned `~/.openclaw/skills` and found `antfarm-workflows/SKILL.md`.
+- Scanned `~/.codex/skills` and found `antfarm-workflows/SKILL.md`.
 - No plan-specific skill exists there today.
 - Applied repository security standards directly.

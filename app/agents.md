@@ -25,7 +25,7 @@ Define implementation guardrails for demo UI pages and shared styling.
 
 ## Skills usage instructions
 
-- Skills directory: `~/.openclaw/skills`.
+- Skills directory: `~/.codex/skills`.
 - Use `frontend-design` and `web-design-guidelines` for styling and accessibility refinements.
 - Use `webapp-testing` for UI verification before completion claims.
 

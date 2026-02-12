@@ -160,6 +160,6 @@ revoke all on public.attendees from anon, authenticated;
 
 ## Skills used
 
-- Scanned `~/.openclaw/skills` and found `antfarm-workflows/SKILL.md`.
+- Scanned `~/.codex/skills` and found `antfarm-workflows/SKILL.md`.
 - No Supabase/RLS-specific skill exists there today.
 - Applied repository RLS standards directly.

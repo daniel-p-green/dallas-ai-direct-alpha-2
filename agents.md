@@ -28,15 +28,15 @@ Define global delivery standards for Dallas AI Direct Alpha repository outputs.
 
 ## Skills
 
-• Skills directory: ~/.openclaw/skills  
-• Discovery: list files under ~/.openclaw/skills and search for keywords: “supabase”, “rls”, “threat”, “repo”, “runbook”, “demo”, “prd”, “jtbd”, “stories”, “tests”.  
+• Skills directory: ~/.codex/skills  
+• Discovery: list files under ~/.codex/skills and search for keywords: “supabase”, “rls”, “threat”, “repo”, “runbook”, “demo”, “prd”, “jtbd”, “stories”, “tests”.  
 • Application: apply the smallest set of skills needed to complete the task.  
 • Traceability: add a “Skills used” section with filenames.
 
 ### Skills policy patch
 
-- Skills live at `~/.openclaw/skills`.
-- I must scan `~/.openclaw/skills` for relevant skills before I write or edit docs.
+- Skills live at `~/.codex/skills`.
+- I must scan `~/.codex/skills` for relevant skills before I write or edit docs.
 - I must apply the smallest set of skills needed.
 - I must add "Skills used" with filenames at the end of the file I modify when it improves auditability.
 - I must treat attendee email as sensitive. I must never expose it in any public view, example, or screenshot.

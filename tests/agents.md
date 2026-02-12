@@ -24,7 +24,7 @@ Define markdown-based test plans for security, privacy, abuse resistance, auth, 
 
 ## Skills Usage Instructions
 
-- Skills directory: `~/.openclaw/skills`.
+- Skills directory: `~/.codex/skills`.
 - Scan for `supabase`, `rls`, `threat`, and `tests` before edits.
 - Apply the smallest relevant set and add `Skills used` when helpful.
 

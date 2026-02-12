@@ -45,6 +45,6 @@ Run these checks in order before going live.
 
 ## Skills used
 
-- Scanned `~/.openclaw/skills` and found `antfarm-workflows/SKILL.md`.
+- Scanned `~/.codex/skills` and found `antfarm-workflows/SKILL.md`.
 - No dedicated runtime-validation skill exists there today.
 - Applied repository pre-demo validation standards directly.

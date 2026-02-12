@@ -11,5 +11,5 @@ Place v0-generated application code in this directory.
 
 ## Skills used
 
-- Source scan attempted: `~/.openclaw/skills` (directory not present in current environment)
+- Source scan attempted: `~/.codex/skills` (directory not present in current environment)
 - Applied: repository root standards from `agents.md`

@@ -34,5 +34,5 @@ Build the production-track v0 implementation in an isolated path without couplin
 
 ## Skills used
 
-- Source scan attempted: `~/.openclaw/skills` (directory not present in current environment)
+- Source scan attempted: `~/.codex/skills` (directory not present in current environment)
 - Applied: repository root standards from `agents.md`

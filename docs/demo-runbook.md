@@ -57,6 +57,6 @@ Signup consent control:
 
 ## Skills used
 
-- Scanned `~/.openclaw/skills` and found `antfarm-workflows/SKILL.md`.
+- Scanned `~/.codex/skills` and found `antfarm-workflows/SKILL.md`.
 - No demo/runbook-specific skill exists there today, so this file applies
   repository runbook standards directly.

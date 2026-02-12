@@ -37,6 +37,6 @@ If docs conflict, follow:
 
 ## Skills used
 
-- Source: `~/.openclaw/skills`
+- Source: `~/.codex/skills`
 - Applied: `verification-before-completion`, `webapp-testing`, `supabase-postgres-best-practices`
 - Notes: Used to keep launch checks deterministic and security-first.
