@@ -16,6 +16,7 @@ required_commands=(
   "npm test"
   "npm run typecheck"
   "npm run build"
+  "bash tests/validate-validation-report.sh"
 )
 
 for cmd in "${required_commands[@]}"; do
@@ -26,8 +27,8 @@ for cmd in "${required_commands[@]}"; do
 done
 
 pass_count=$(grep -Fc -- "- Status: PASS" "$REPORT")
-if [[ "$pass_count" -ne 7 ]]; then
-  echo "FAIL: expected 7 PASS statuses, found $pass_count"
+if [[ "$pass_count" -ne 8 ]]; then
+  echo "FAIL: expected 8 PASS statuses, found $pass_count"
   exit 1
 fi
 
