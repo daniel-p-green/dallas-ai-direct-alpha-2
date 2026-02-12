@@ -9,8 +9,9 @@ Deliver a secure, low-friction attendee directory that answers
 
 Attendees scan a QR code during Q and A, submit in under 30 seconds,
 and appear on the live room board within seconds. The board shows only
-public-safe fields: `name`, `title` (if provided), `company` (if
-provided), `ai_comfort_level`, `help_offered`, and `linkedin_url`.
+public-safe fields: `name`, `title` (if attendee explicitly opts in),
+`company` (if attendee explicitly opts in), `ai_comfort_level`,
+`help_offered`, and `linkedin_url`.
 The board never shows `email`.
 
 ## Audience and stakes
@@ -41,7 +42,7 @@ The board never shows `email`.
 | Data store | Supabase Postgres | Strong RLS and fast setup |
 | Security boundary | Database controls first | Enforces policy even if UI fails |
 | Public reads | `attendees_public` view | Prevents accidental email exposure |
-| Optional fields | `title`, `company` | Aligns schema with on-stage narrative |
+| Optional fields | `title`, `company` (displayed only with explicit consent) | Aligns schema with on-stage narrative while keeping optional profile data opt-in |
 | Alpha gate | Optional password gate | Convenience only, not primary security |
 
 ## Failure modes and pivots
