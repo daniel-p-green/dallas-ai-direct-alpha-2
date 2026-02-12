@@ -30,7 +30,7 @@ test('PLAN, PRD, and security docs stay aligned on privacy boundary and alpha po
   // RLS boundary remains the primary control.
   assert.match(plan, /RLS and a\s+public-safe view/i);
   assert.match(prd, /Security-first backend controls with RLS\./i);
-  assert.match(security, /Supabase RLS enforces data access in the database\./i);
+  assert.match(security, /Neon Postgres RLS enforces data access in the database\./i);
 
   // Consent posture for optional title/company is explicit.
   assert.match(plan, /title`, `company` \(displayed only with explicit consent\)/i);

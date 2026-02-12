@@ -22,14 +22,14 @@ Define global delivery standards for Dallas AI Direct Alpha repository outputs.
 
 - Never expose `email` in any public view or response.
 - Directory reads only from `attendees_public`.
-- Enforce Supabase RLS on sensitive tables.
+- Enforce Neon Postgres RLS on sensitive tables.
 - Treat password gate as convenience layer only.
 - Do not store secrets in repo.
 
 ## Skills
 
 • Skills directory: ~/.codex/skills  
-• Discovery: list files under ~/.codex/skills and search for keywords: “supabase”, “rls”, “threat”, “repo”, “runbook”, “demo”, “prd”, “jtbd”, “stories”, “tests”.  
+• Discovery: list files under ~/.codex/skills and search for keywords: “neon”, “rls”, “threat”, “repo”, “runbook”, “demo”, “prd”, “jtbd”, “stories”, “tests”.  
 • Application: apply the smallest set of skills needed to complete the task.  
 • Traceability: add a “Skills used” section with filenames.
 

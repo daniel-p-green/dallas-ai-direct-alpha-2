@@ -2,7 +2,7 @@
 
 ## Primary boundary model
 
-Enforce privacy and access control in Supabase, then reflect that boundary in UI behavior.
+Enforce privacy and access control in Neon Postgres, then reflect that boundary in UI behavior.
 
 ## Data access contract
 
@@ -16,7 +16,7 @@ Enforce privacy and access control in Supabase, then reflect that boundary in UI
 
 - Never query base table `attendees` for public room display.
 - Never render `email` in public UI, logs, toasts, or debug payloads.
-- Never place `SUPABASE_SERVICE_ROLE_KEY` in client code.
+- Never place `NEON_DATABASE_URL` in client code.
 - Keep RLS deny-by-default posture on sensitive base tables.
 - Keep password gate messaging explicit: convenience only.
 

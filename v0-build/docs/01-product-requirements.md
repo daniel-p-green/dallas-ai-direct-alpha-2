@@ -25,7 +25,7 @@ Deliver a secure, fast attendee room board flow that answers "who is in the room
 | NFR-1 | System enforces privacy at the database boundary with RLS. |
 | NFR-2 | System keeps public UI mobile-usable at 375px width. |
 | NFR-3 | System surfaces concise user-facing error states and hides internal stack traces. |
-| NFR-4 | System keeps implementation scope limited to Next.js + Supabase for alpha. |
+| NFR-4 | System keeps implementation scope limited to Next.js + Neon Postgres for alpha. |
 
 ## Acceptance criteria
 

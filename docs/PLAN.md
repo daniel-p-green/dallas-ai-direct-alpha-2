@@ -39,7 +39,7 @@ The board never shows `email`.
 
 | Decision | Choice | Rationale |
 | --- | --- | --- |
-| Data store | Supabase Postgres | Strong RLS and fast setup |
+| Data store | Neon Postgres | Strong RLS and fast setup |
 | Security boundary | Database controls first | Enforces policy even if UI fails |
 | Public reads | `attendees_public` view | Prevents accidental email exposure |
 | Optional fields | `title`, `company` (displayed only with explicit consent) | Aligns schema with on-stage narrative while keeping optional profile data opt-in |

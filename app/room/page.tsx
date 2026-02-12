@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from 'react';
-import { getSupabaseBrowserClient, hasSupabaseBrowserEnv } from '../../lib/supabase/browser';
 
 type Attendee = {
   name: string;
@@ -71,7 +70,7 @@ export default function RoomPage() {
     []
   );
   const [attendees, setAttendees] = useState<Attendee[]>(fallbackAttendees);
-  const [dataMode, setDataMode] = useState<'live' | 'fallback'>(hasSupabaseBrowserEnv() ? 'live' : 'fallback');
+  const [dataMode, setDataMode] = useState<'live' | 'fallback'>('fallback');
   const [loadMessage, setLoadMessage] = useState<string | null>(null);
   const [lastPollAt, setLastPollAt] = useState(Date.now());
   // Track whether client has mounted to avoid hydration mismatch on time-dependent rendering
@@ -81,35 +80,24 @@ export default function RoomPage() {
     let isActive = true;
 
     const loadAttendees = async () => {
-      if (!hasSupabaseBrowserEnv()) {
-        if (isActive) {
-          setDataMode('fallback');
-          setLoadMessage('Showing demo seed data. Configure public Supabase variables for live room data.');
-          setAttendees(fallbackAttendees);
-          setLastPollAt(Date.now());
-        }
-        return;
-      }
-
       try {
-        const supabase = getSupabaseBrowserClient();
-        const { data, error } = await supabase
-          .from('attendees_public')
-          .select('name,title,company,linkedin_url,ai_comfort_level,help_offered,created_at')
-          .order('created_at', { ascending: false })
-          .limit(200);
+        const response = await fetch('/api/attendees-public', { cache: 'no-store' });
+        const responseBody = (await response.json().catch(() => null)) as
+          | { message?: string; rows?: Attendee[] }
+          | null;
 
-        if (error) {
+        if (!response.ok) {
           if (isActive) {
             setDataMode('fallback');
-            setLoadMessage('Live room data is unavailable. Showing demo seed data.');
+            setLoadMessage(responseBody?.message ?? 'Live room data is unavailable. Showing demo seed data.');
             setAttendees(fallbackAttendees);
             setLastPollAt(Date.now());
           }
           return;
         }
 
-        const mapped: Attendee[] = (data ?? []).map((row) => ({
+        const rows = Array.isArray(responseBody?.rows) ? responseBody.rows : [];
+        const mapped: Attendee[] = rows.map((row) => ({
           name: typeof row.name === 'string' && row.name.trim().length > 0 ? row.name : 'Attendee',
           title: typeof row.title === 'string' ? row.title : undefined,
           company: typeof row.company === 'string' ? row.company : undefined,

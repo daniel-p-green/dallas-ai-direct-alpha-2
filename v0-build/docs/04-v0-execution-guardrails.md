@@ -7,7 +7,7 @@ Keep v0 output tightly scoped to the alpha production build while preserving dat
 ## Scope in
 
 - Shared shell and route structure for alpha surfaces.
-- Signup and room-board UI with Supabase wiring.
+- Signup and room-board UI with Neon wiring.
 - Dallas AI brand logo integration and UI consistency.
 - Optional alpha password gate with explicit messaging.
 
@@ -16,7 +16,7 @@ Keep v0 output tightly scoped to the alpha production build while preserving dat
 - Schema redesign and migration expansion.
 - OAuth, SSO, magic links, and auth architecture redesign.
 - Realtime subscription dependency for core demo path.
-- New backend platforms beyond existing Next.js + Supabase stack.
+- New backend platforms beyond existing Next.js + Neon stack.
 
 ## Stop conditions
 
@@ -33,7 +33,7 @@ Stop and rerun prompt with guardrails if any output does the following:
 Use this order from `v0-build/prompts/`:
 
 1. `INDEX.md`
-2. `08-supabase-connection-wiring.md`
+2. `08-neon-connection-wiring.md`
 3. `09-auth-minimal-alpha-gate.md` (optional)
 
 ## Output contract

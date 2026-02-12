@@ -30,7 +30,7 @@ Build the production-track v0 implementation in an isolated path without couplin
 - Read public directory data from `attendees_public` only.
 - Keep Dallas AI logo assets visible on hero and shared shell surfaces.
 - Treat any alpha password gate as convenience, not security boundary.
-- Keep Supabase RLS and projection boundaries unchanged.
+- Keep Neon Postgres RLS and projection boundaries unchanged.
 
 ## Skills used
 

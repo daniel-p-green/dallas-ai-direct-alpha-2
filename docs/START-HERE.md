@@ -38,5 +38,5 @@ If docs conflict, follow:
 ## Skills used
 
 - Source: `~/.codex/skills`
-- Applied: `verification-before-completion`, `webapp-testing`, `supabase-postgres-best-practices`
+- Applied: `verification-before-completion`, `webapp-testing`, `writing-clearly-and-concisely`
 - Notes: Used to keep launch checks deterministic and security-first.

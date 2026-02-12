@@ -14,14 +14,14 @@ Generate the Dallas AI Direct production-track build in `v0-build/app/` using no
 - Do not redesign schema.
 - Do not add OAuth, SSO, or magic links.
 - Do not add realtime subscriptions. Use polling.
-- Do not add new backend services beyond Supabase.
+- Do not add new backend services beyond Neon.
 - Do not change RLS posture or remove `attendees_public` boundary.
 - Do not remove Dallas AI logo from shared shell or hero surfaces.
 
 ## Recommended execution order
 1) Build route and shell baseline in `v0-build/app/`.
 2) Apply Dallas AI brand lockups from `v0-build/brand/`.
-3) Run `08-supabase-connection-wiring.md`.
+3) Run `08-neon-connection-wiring.md`.
 4) Run `09-auth-minimal-alpha-gate.md` (optional).
 
 Rationale: establish structure, enforce brand identity, wire secure data flows, and keep optional gate controls isolated.

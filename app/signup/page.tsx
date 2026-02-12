@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { type FormEvent, useState } from 'react';
-import { getSupabaseBrowserClient, hasSupabaseBrowserEnv } from '../../lib/supabase/browser';
 
 /** Multi-select options for help_needed and help_offered fields (mirrors data model) */
 const HELP_OPTIONS = [
@@ -35,14 +34,6 @@ export default function SignupPage() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!hasSupabaseBrowserEnv()) {
-      setStatus({
-        type: 'error',
-        message: 'Signup is temporarily unavailable. Public environment variables are missing.'
-      });
-      return;
-    }
-
     const form = event.currentTarget;
     const formData = new FormData(form);
     const honeypot = typeof formData.get('honeypot') === 'string' ? String(formData.get('honeypot')).trim() : '';
@@ -74,11 +65,15 @@ export default function SignupPage() {
     setStatus({ type: 'submitting' });
 
     try {
-      const supabase = getSupabaseBrowserClient();
-      const { error } = await supabase.from('attendees').insert(payload);
+      const response = await fetch('/api/attendees', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const responseBody = (await response.json().catch(() => null)) as { message?: string } | null;
 
-      if (error) {
-        if (error.code === '23505') {
+      if (!response.ok) {
+        if (response.status === 409) {
           setStatus({
             type: 'error',
             message: 'This email has already been used for signup.'
@@ -88,7 +83,7 @@ export default function SignupPage() {
 
         setStatus({
           type: 'error',
-          message: 'Signup failed. Please try again in a moment.'
+          message: responseBody?.message ?? 'Signup failed. Please try again in a moment.'
         });
         return;
       }

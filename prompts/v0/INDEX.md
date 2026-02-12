@@ -7,7 +7,7 @@ Generate the Dallas AI Direct alpha demo quickly and safely using v0. Keep scope
 - Do not redesign schema.
 - Do not add OAuth, SSO, or magic links.
 - Do not add realtime subscriptions. Use polling.
-- Do not add new backend services beyond Supabase.
+- Do not add new backend services beyond Neon.
 - Do not change RLS posture or remove attendees_public boundary.
 
 ## Recommended execution order
@@ -18,10 +18,10 @@ Generate the Dallas AI Direct alpha demo quickly and safely using v0. Keep scope
 5) 05-admin-demo-control-panel-ui-only.md
 6) 06-landing-page-and-hero-moment.md
 7) 07-room-board-qol-polish.md
-8) 08-supabase-connection-wiring.md
+8) 08-neon-connection-wiring.md
 9) 09-auth-minimal-alpha-gate.md (optional)
 
-Rationale: establish routes and shared layout, build insert path, lock consent and privacy language, then build public read surfaces, add controlled QoL, wire Supabase carefully, and keep auth gate optional.
+Rationale: establish routes and shared layout, build insert path, lock consent and privacy language, then build public read surfaces, add controlled QoL, wire Neon carefully, and keep auth gate optional.
 
 ## Stop immediately if
 - v0 proposes schema redesign or new tables not already documented.

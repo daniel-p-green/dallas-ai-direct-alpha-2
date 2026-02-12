@@ -31,7 +31,7 @@ require_match "docs/security.md" 'excludes `email`' "security doc must assert em
 # RLS boundary posture.
 require_match "docs/PLAN.md" "RLS and a[[:space:]]+public-safe view" "PLAN must preserve RLS/public-view boundary"
 require_match "docs/PRD.md" "Security-first backend controls with RLS\." "PRD must preserve RLS-first posture"
-require_match "docs/security.md" "Supabase RLS enforces data access in the database\." "security doc must preserve DB boundary claim"
+require_match "docs/security.md" "Neon Postgres RLS enforces data access in the database\." "security doc must preserve DB boundary claim"
 
 # Alpha auth posture is convenience-only.
 require_match "docs/PLAN.md" "Alpha gate \| Optional password gate \| Convenience only, not primary security" "PLAN must keep alpha gate convenience-only posture"

@@ -1,4 +1,4 @@
-# Supabase RLS policies and public view SQL
+# Neon Postgres RLS policies and public view SQL
 
 ## Schema and view
 
@@ -53,13 +53,36 @@ alter table public.attendees force row level security;
 Do not create broad allow policies.
 Add only the explicit policies below.
 
-## Insert policy for anon and authenticated
+## Role bootstrap for Neon
 
 ```sql
-create policy attendees_insert_anon_auth
+do $$
+begin
+  if not exists (select 1 from pg_roles where rolname = 'app_public') then
+    create role app_public nologin;
+  end if;
+  if not exists (select 1 from pg_roles where rolname = 'app_registered') then
+    create role app_registered nologin;
+  end if;
+  if not exists (select 1 from pg_roles where rolname = 'app_staff') then
+    create role app_staff nologin;
+  end if;
+  if not exists (select 1 from pg_roles where rolname = 'app_admin') then
+    create role app_admin nologin;
+  end if;
+end
+$$;
+
+grant usage on schema public to app_public, app_registered, app_staff, app_admin;
+```
+
+## Insert policy for public and registered roles
+
+```sql
+create policy attendees_insert_public_registered
 on public.attendees
 for insert
-to anon, authenticated
+to app_public, app_registered
 with check (
   honeypot = ''
   and position('@' in email) > 1
@@ -71,7 +94,7 @@ with check (
 ## Select policy design for direct table reads
 
 ```sql
--- Intentionally omit select policies for anon/authenticated users
+-- Intentionally omit select policies for app_public/app_registered users
 -- on public.attendees to block direct table reads.
 ```
 
@@ -81,38 +104,27 @@ with check (
 create policy attendees_select_admin_or_staff
 on public.attendees
 for select
-to authenticated
-using (
-  auth.jwt() ->> 'role' in ('admin', 'staff')
-);
+to app_staff, app_admin
+using (true);
 ```
 
 ## Staff moderation role setup (Dallas AI staff)
 
-Use JWT app metadata roles for staff moderation controls.
+Use explicit Postgres roles for moderation controls.
 
 ```sql
--- Role claim convention:
--- auth.jwt() ->> 'role' in ('staff', 'admin')
-
 create policy attendees_update_staff_only
 on public.attendees
 for update
-to authenticated
-using (
-  auth.jwt() ->> 'role' in ('staff', 'admin')
-)
-with check (
-  auth.jwt() ->> 'role' in ('staff', 'admin')
-);
+to app_staff, app_admin
+using (true)
+with check (true);
 
 create policy attendees_delete_admin_only
 on public.attendees
 for delete
-to authenticated
-using (
-  auth.jwt() ->> 'role' = 'admin'
-);
+to app_admin
+using (true);
 ```
 
 Operational guidance:
@@ -123,16 +135,18 @@ Operational guidance:
 ## View grants and table revocation
 
 ```sql
-grant select on public.attendees_public to anon, authenticated;
-revoke all on public.attendees from anon, authenticated;
+grant select on public.attendees_public to app_public, app_registered;
+revoke all on public.attendees from app_public, app_registered;
 ```
 
 ## Role model and service role notes
 
-- `anon`: may insert (subject to policy), may select from `attendees_public`.
-- `authenticated`: may insert (subject to policy), may select from `attendees_public`.
-- `service_role`: server-side only. Never expose in browser code.
-- Table owner and service role can bypass RLS semantics in some contexts.
+- `app_public`: may insert (subject to policy), may select from `attendees_public`.
+- `app_registered`: may insert (subject to policy), may select from `attendees_public`.
+- `app_staff`: may select and update base table rows for moderation.
+- `app_admin`: may select, update, and delete base table rows.
+- `app_service`: server-side only. Never expose in browser code.
+- Table owner and privileged service roles can bypass RLS semantics in some contexts.
   Keep privileged operations in trusted server execution paths.
 
 ## Alpha pattern (explicit)
@@ -161,5 +175,5 @@ revoke all on public.attendees from anon, authenticated;
 ## Skills used
 
 - Scanned `~/.codex/skills` and found `antfarm-workflows/SKILL.md`.
-- No Supabase/RLS-specific skill exists there today.
+- No Neon/Postgres RLS-specific skill exists there today.
 - Applied repository RLS standards directly.

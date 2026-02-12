@@ -6,7 +6,7 @@ Reference implementation for a governed, community-owned attendee directory buil
 
 ## Executive Summary
 
-Dallas AI Direct Alpha addresses a concrete operating constraint: dependency on paid third-party attendee directory access. Dallas AI has 10,000+ members, and at 10% paid participation with $3 to $5 annual pricing, this represents an estimated $36,000 to $60,000 annualized cost exposure. This project demonstrates a lower-cost, governed alternative that preserves participant trust. The architecture enforces access at the database boundary with Supabase RLS and a projection view (`attendees_public`) that excludes email from public reads. The design uses explicit consent for optional profile visibility and keeps sensitive data private by default. The live demo proves a simple hero moment: QR signup in about 30 seconds, room board update within 5 seconds, and no public email exposure. This repository demonstrates a repeatable AI Infrastructure Sprint pattern that delivers a working artifact in hours, not a slide deck.
+Dallas AI Direct Alpha addresses a concrete operating constraint: dependency on paid third-party attendee directory access. Dallas AI has 10,000+ members, and at 10% paid participation with $3 to $5 annual pricing, this represents an estimated $36,000 to $60,000 annualized cost exposure. This project demonstrates a lower-cost, governed alternative that preserves participant trust. The architecture enforces access at the database boundary with Neon Postgres RLS and a projection view (`attendees_public`) that excludes email from public reads. The design uses explicit consent for optional profile visibility and keeps sensitive data private by default. The live demo proves a simple hero moment: QR signup in about 30 seconds, room board update within 5 seconds, and no public email exposure. This repository demonstrates a repeatable AI Infrastructure Sprint pattern that delivers a working artifact in hours, not a slide deck.
 
 ---
 
@@ -49,7 +49,7 @@ Client (QR + Browser)
 API Route (Validated Insert)
         |
         v
-Supabase Postgres
+Neon Postgres
         |
         v
 RLS (Deny by Default)
@@ -164,18 +164,18 @@ This sprint produces a working artifact, not a slide deck.
 ### Stack
 
 - Next.js
-- Supabase Postgres
-- Supabase RLS policies
+- Neon Postgres
+- Postgres RLS policies
 
 ### Environment variables
 
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `SUPABASE_SERVICE_ROLE_KEY` (server-side only)
+- `NEON_DATABASE_URL` (server-side only)
+- `NEON_DATABASE_URL_POOLED` (server-side only, optional)
+- `NEON_DATABASE_URL_READONLY` (server-side only, optional)
 
 ### Setup outline
 
-1. Provision Supabase project.
+1. Provision Neon project.
 2. Apply schema and RLS docs.
 3. Start app locally.
 4. Run runtime validation checks.

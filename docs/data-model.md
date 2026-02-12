@@ -44,5 +44,5 @@ Recommended public fields:
 ## Skills used
 
 - Scanned `~/.codex/skills` and found `antfarm-workflows/SKILL.md`.
-- No Supabase data-model skill exists there today.
+- No Neon/Postgres data-model skill exists there today.
 - Applied repository data-minimization standards directly.

@@ -9,7 +9,7 @@
 
 ## Primary control plane
 
-- Supabase RLS enforces data access in the database.
+- Neon Postgres RLS enforces data access in the database.
 - `attendees_public` excludes `email` and other private fields.
 - UI reads directory data from `attendees_public` only.
 - Optional profile fields (`title`, `company`) are shown publicly only with explicit attendee consent.

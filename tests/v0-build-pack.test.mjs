@@ -22,7 +22,7 @@ test('v0-build workspace includes required directories and files', () => {
     'v0-build/docs/03-brand-and-visual-requirements.md',
     'v0-build/docs/04-v0-execution-guardrails.md',
     'v0-build/prompts/INDEX.md',
-    'v0-build/prompts/08-supabase-connection-wiring.md',
+    'v0-build/prompts/08-neon-connection-wiring.md',
     'v0-build/prompts/09-auth-minimal-alpha-gate.md',
     'v0-build/brand/dallas-ai-logo-color.png',
     'v0-build/brand/dallas-ai-logo-white.png'
