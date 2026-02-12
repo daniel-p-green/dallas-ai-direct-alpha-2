@@ -15,3 +15,8 @@ Started: 2026-02-12 03:02 America/Chicago
 - Added documentation test assets: `tests/brand-guidelines-tests.md` and `tests/validate-brand-guidelines.sh`.
 - **Learnings:** The repo does not currently define npm scripts for build/test/typecheck, so doc validation is performed with direct shell checks.
 ---
+## 2026-02-12 03:12 America/Chicago - US-001 retry completion
+- Added `docs/ui-patterns.md` and `docs/assets.md` to satisfy cross-story acceptance dependencies flagged by verifier.
+- Updated `README.md` with a short Design System section linking to brand docs.
+- Kept changes isolated to `docs/` and `README.md`.
+- Ran lightweight doc validation checks using `rg` due missing package scripts.
