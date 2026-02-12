@@ -14,10 +14,10 @@ create table if not exists public.attendees (
   title text,
   company text,
   ai_comfort_level int not null check (ai_comfort_level between 1 and 5),
-  help_needed text[] not null default '{}',
-  help_offered text[] not null default '{}',
-  other_help_needed text,
-  other_help_offered text,
+  help_needed text[] not null default '{}' check (cardinality(help_needed) <= 20),
+  help_offered text[] not null default '{}' check (cardinality(help_offered) <= 20),
+  other_help_needed text check (other_help_needed is null or char_length(other_help_needed) <= 500),
+  other_help_offered text check (other_help_offered is null or char_length(other_help_offered) <= 500),
   honeypot text not null default ''
 );
 
@@ -40,10 +40,11 @@ select
 from public.attendees;
 ```
 
-## Enable RLS
+## Enable and force RLS
 
 ```sql
 alter table public.attendees enable row level security;
+alter table public.attendees force row level security;
 ```
 
 ## Deny-by-default policy posture
@@ -92,6 +93,14 @@ grant select on public.attendees_public to anon, authenticated;
 revoke all on public.attendees from anon, authenticated;
 ```
 
+## Role model and service role notes
+
+- `anon`: may insert (subject to policy), may select from `attendees_public`.
+- `authenticated`: may insert (subject to policy), may select from `attendees_public`.
+- `service_role`: server-side only. Never expose in browser code.
+- Table owner and service role can bypass RLS semantics in some contexts.
+  Keep privileged operations in trusted server execution paths.
+
 ## Alpha pattern (explicit)
 
 - UI reads directory data only from `attendees_public`.
@@ -99,10 +108,11 @@ revoke all on public.attendees from anon, authenticated;
 - RLS remains deny-by-default on `attendees`.
 - Alpha password gate is convenience only.
 
-## Service role guidance
+## Target state and test expectation
 
-- Use service role only in trusted server-side code.
-- Never expose service role key in frontend bundles.
+- Keep all public directory reads on view-only paths.
+- Treat any direct table read in app code as release-blocking.
+- Enforce this with policy and privacy leak tests.
 
 ## Abuse controls
 

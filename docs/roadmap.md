@@ -16,3 +16,9 @@
 - Multi-community support.
 - Data retention policies.
 - Export controls with explicit governance workflows.
+
+## Skills used
+
+- Scanned `~/.openclaw/skills` and found `antfarm-workflows/SKILL.md`.
+- No roadmap-specific skill exists there today.
+- Applied repository roadmap documentation standards directly.

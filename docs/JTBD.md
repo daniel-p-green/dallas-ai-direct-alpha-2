@@ -10,3 +10,9 @@
 
 ## CISO Jobs
 - When I review this system, I want explicit backend controls and test evidence so I can assess risk quickly.
+
+## Skills used
+
+- Scanned `~/.openclaw/skills` and found `antfarm-workflows/SKILL.md`.
+- No JTBD-specific skill exists there today.
+- Applied repository JTBD documentation standards directly.
