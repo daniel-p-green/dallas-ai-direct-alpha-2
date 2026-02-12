@@ -37,3 +37,10 @@ Started: 2026-02-12 03:02 America/Chicago
 - Re-ran documentation validation for brand guideline content.
 - **Learnings:** Documentation-only stories can still be blocked by repository-wide TypeScript checks when test harness dependencies are missing.
 ---
+## 2026-02-12 04:08 America/Chicago - US-002: Add reusable UI pattern documentation for demo surfaces
+- Updated `docs/ui-patterns.md` to keep required reusable pattern sections and made the privacy notice wording explicit: email is never displayed publicly on the room board.
+- Updated `README.md` with an explicit `## Design System` section linking to brand, UI patterns, and assets docs.
+- Added `tests/ui-patterns-docs.test.mjs` to validate required sections, required content/constraints, privacy-first language, and non-endorsement wording.
+- Expanded `npm test` to run all `tests/*.test.mjs` suites so doc tests execute with existing app-shell tests.
+- **Learnings:** For documentation stories in this repo, executable `node:test` content checks provide fast, deterministic acceptance coverage without adding UI harness complexity.
+---

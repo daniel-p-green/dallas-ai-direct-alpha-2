@@ -81,7 +81,7 @@ Show who is in the room using only public-safe attendee data.
 Reinforce privacy behavior where users make data-entry decisions.
 
 ### Required Content
-- Canonical message: `Email stays private and never appears on the public board.`
+- Canonical message: `Email stays private and is never displayed publicly on the room board.`
 - Optional short link to privacy documentation
 
 ### States

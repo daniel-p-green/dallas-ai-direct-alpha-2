@@ -209,7 +209,9 @@ References:
 - `ops/` operational checklists and incident guidance
 - `prompts/v0/` deterministic UI build orchestration
 
-Design references:
+## Design System
+
+For demo-facing UI, use the minimal design system package:
 - `docs/brand-guidelines.md`
 - `docs/ui-patterns.md`
 - `docs/assets.md`
