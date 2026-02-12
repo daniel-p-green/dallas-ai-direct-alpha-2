@@ -8,6 +8,7 @@ Started: 2026-02-12 03:02 America/Chicago
 - Validation for documentation stories can be implemented as lightweight shell checks in `tests/` when no package scripts exist.
 - UI implementation now uses Next.js App Router under `app/` with route-local `page.tsx` files and shared shell in `app/layout.tsx`.
 - Lightweight implementation tests can run with `node:test` and file-content assertions when no browser test harness is required.
+- `npm run typecheck` scans `tests/**/*.ts`; browser-spec TypeScript files require installed type dependencies (for example `@playwright/test`) to keep CI green.
 
 ---
 ## 2026-02-12 03:03 America/Chicago - US-001: Create Geist-aligned brand guidelines document
@@ -29,4 +30,10 @@ Started: 2026-02-12 03:02 America/Chicago
 - Added baseline Geist-style readable CSS layout suitable for projector/mobile demo contexts.
 - Added app shell tests in `tests/app-shell.test.mjs` validating required route files and shared layout text invariants.
 - **Learnings:** Introducing minimal `package.json` + TypeScript setup enables deterministic typecheck and test execution for future UI stories.
+---
+## 2026-02-12 03:31 America/Chicago - US-001 retry: resolve typecheck gate for brand guidelines story
+- Kept `docs/brand-guidelines.md` as the source of truth with required Geist-style, privacy, and non-endorsement language.
+- Fixed story verification blocker by adding `@playwright/test` as a dev dependency so repository typecheck passes with existing `tests/ui-mobile-audit.spec.ts`.
+- Re-ran documentation validation for brand guideline content.
+- **Learnings:** Documentation-only stories can still be blocked by repository-wide TypeScript checks when test harness dependencies are missing.
 ---
