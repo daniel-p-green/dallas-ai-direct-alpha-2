@@ -29,6 +29,8 @@ Run `tests/ui-mobile-audit.md` on iPhone Safari and Android Chrome.
 Confirm QR entry, form usability at 375px width, consent default state,
 room-board privacy badge visibility, newest-first behavior, and no public email.
 
+Use `docs/PRE-DEMO-COMMAND-CARD.md` as the execution order for pre-demo checks.
+
 ## Failure response
 
 - Switch to seeded dataset mode.
