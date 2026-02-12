@@ -1,72 +1,95 @@
 # UI Patterns (Geist-Style Conventions)
 
-This document defines reusable UI patterns for Dallas AI Direct Alpha.
-The team references Geist-style conventions for clarity and consistency.
+This document defines reusable UI patterns for Dallas AI Direct Alpha demo surfaces.
+The team references Geist-style conventions for consistency and clarity.
 This project does not claim official endorsement by Vercel or Geist.
 
-## Hero Banner Pattern
+## Hero Banner
 
-Purpose:
-- Frame the problem, boundary model, and call to action in one viewport.
+### Purpose
+Set context in one viewport and direct the attendee to the next action.
 
-Structure:
-- Eyebrow: `ALPHA DEMO`
-- Title: one sentence outcome
-- Subtext: privacy boundary statement
-- CTA row: `Join via QR`, `View Room Board`
+### Required Content
+- Eyebrow label: `ALPHA DEMO`
+- Outcome-focused headline (single sentence)
+- Supporting line that states public and private data boundaries
+- Primary action: `Join via QR`
+- Secondary action: `View Room Board`
 
-Rules:
-- Keep heading weight medium or semibold for projector readability.
-- Keep line length short.
-- Keep contrast high.
+### States
+- Default: headline and both actions visible
+- Compact: headline and primary action remain visible on narrow screens
 
-## QR Signup Card Pattern
+### Do / Don't
+- Do keep headline concise and readable from projector distance.
+- Do keep high text contrast against the background.
+- Do keep copy in active voice.
+- Don't introduce promotional claims or endorsement language.
+- Don't include attendee email or any private field in banner content.
 
-Purpose:
-- Collect required data quickly with low friction.
+## QR Signup Card
 
-Structure:
-- Required fields first: name, email, comfort, help arrays.
-- Optional fields grouped under "Optional profile".
-- Consent row near title/company.
-- Privacy note adjacent to submit button.
+### Purpose
+Collect required attendee inputs quickly while preserving privacy boundaries.
 
-Rules:
-- Keep inline validation concise.
-- Keep helper text calm and precise.
-- Never display submitted email after submit.
+### Required Content
+- Required inputs: name, email, comfort level, help-offer arrays
+- Optional inputs grouped under `Optional profile`
+- Consent acknowledgment near title and company fields
+- Privacy note next to submit action
 
-## Public Room Board Pattern
+### States
+- Empty: required fields visible, submit disabled until required fields are valid
+- Validation error: concise inline guidance for the affected field
+- Submitting: loading indicator with controls locked
+- Success: confirmation message without exposing private fields
 
-Purpose:
-- Answer "Who is in the room?" using public-safe fields.
+### Do / Don't
+- Do place required fields before optional fields.
+- Do keep validation text brief and action-oriented.
+- Do state privacy constraints near submission.
+- Don't request non-essential data for demo scope.
+- Don't render submitted email in any success or follow-up UI.
 
-Structure:
-- Header: board title, badge `Public view – emails excluded`, updated timestamp.
-- Metrics row: total count, comfort summary, high-comfort percentage.
-- List row: newest-first entries.
+## Public Room Board
 
-Rules:
-- Read only from `attendees_public` projection.
-- Keep layout static and non-jittery.
-- Use soft tint only for just-joined indicator.
-- Show LinkedIn as icon only.
+### Purpose
+Show who is in the room using only public-safe attendee data.
 
-## Privacy Notice Row Pattern
+### Required Content
+- Header title for the room board
+- Badge: `Public view - emails excluded`
+- Last-updated timestamp
+- Metrics row: total attendees, comfort summary, high-comfort rate
+- Attendee list sorted newest first
 
-Purpose:
-- Reinforce privacy boundary where user decisions occur.
+### States
+- Empty: zero-state message and prompt to join via QR
+- Populated: metrics and attendee rows visible
+- Refreshing: subtle status indicator without layout shift
 
-Canonical text:
-- `Email stays private and never appears on the public board.`
+### Do / Don't
+- Do read only from the public projection (`attendees_public`).
+- Do keep row height stable to prevent visual jitter.
+- Do represent LinkedIn with icon-only treatment when present.
+- Don't include private identifiers, including email.
+- Don't infer or display data that users did not provide.
 
-Rules:
-- Use this exact intent on signup and nearby public board context.
-- Avoid legal/compliance claims.
-- Avoid external endorsement claims.
+## Privacy Notice Row
 
-## Skills used
+### Purpose
+Reinforce privacy behavior where users make data-entry decisions.
 
-- Source: `~/.openclaw/skills`
-- Applied: `webapp-testing`, `verification-before-completion`
-- Notes: Used to standardize deterministic UI checks and delivery rules.
+### Required Content
+- Canonical message: `Email stays private and never appears on the public board.`
+- Optional short link to privacy documentation
+
+### States
+- Inline default: visible under signup actions
+- Contextual repeat: visible near public board entry points
+
+### Do / Don't
+- Do keep the message plain, direct, and consistent across surfaces.
+- Do preserve meaning if wording is shortened for layout.
+- Don't add legal guarantees beyond implemented behavior.
+- Don't reference third-party endorsement or certification.
