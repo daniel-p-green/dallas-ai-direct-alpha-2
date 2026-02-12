@@ -68,5 +68,5 @@ public-safe view prevent email exposure even if the front end breaks.
 ## Skills used
 
 - Scanned `~/.openclaw/skills` and found `antfarm-workflows/SKILL.md`.
-- No Supabase/RLS-specific skill exists there today, so this file applies
-  repository security standards directly.
+- No plan-specific skill exists there today.
+- Applied repository security standards directly.

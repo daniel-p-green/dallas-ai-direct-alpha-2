@@ -225,4 +225,6 @@ For demo-facing UI, use the minimal design system package:
 
 ## Closing
 
-This repository demonstrates how to replace vague AI readiness discussions with a governed, working system in hours. We build this pattern inside organizations around revenue constraints.
+This repository demonstrates how to replace vague AI readiness discussions with a governed, working system in hours.
+
+We build this pattern inside organizations around revenue constraints.
