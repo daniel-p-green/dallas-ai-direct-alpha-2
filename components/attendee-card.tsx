@@ -54,7 +54,7 @@ export function AttendeeCard({
                 target="_blank"
                 rel="noreferrer"
                 aria-label={`${attendee.name} on LinkedIn`}
-                className="shrink-0 text-muted-foreground transition-colors hover:text-primary"
+                className="focus-ring shrink-0 rounded-sm text-muted-foreground transition-colors hover:text-primary"
               >
                 <LinkedinIcon size={14} />
               </a>

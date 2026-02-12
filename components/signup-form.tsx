@@ -190,17 +190,15 @@ export function SignupForm() {
 
         {/* Help needed - pill chips */}
         <FormField label="What help do you need?">
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Help needed options">
             {HELP_OPTIONS.map((opt) => (
               <button
                 key={opt}
                 type="button"
+                aria-pressed={helpNeeded.includes(opt)}
                 onClick={() => toggleChip(helpNeeded, setHelpNeeded, opt)}
-                className={`rounded-full border px-4 py-2 text-[13px] font-medium transition-all active:scale-95 ${
-                  helpNeeded.includes(opt)
-                    ? "border-primary/40 bg-accent text-accent-foreground"
-                    : "border-border bg-card text-muted-foreground hover:text-foreground"
-                }`}
+                data-active={helpNeeded.includes(opt) ? "true" : "false"}
+                className="filter-chip"
               >
                 {opt}
               </button>
@@ -210,17 +208,15 @@ export function SignupForm() {
 
         {/* Help offered - pill chips */}
         <FormField label="What help can you offer?">
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Help offered options">
             {HELP_OPTIONS.map((opt) => (
               <button
                 key={opt}
                 type="button"
+                aria-pressed={helpOffered.includes(opt)}
                 onClick={() => toggleChip(helpOffered, setHelpOffered, opt)}
-                className={`rounded-full border px-4 py-2 text-[13px] font-medium transition-all active:scale-95 ${
-                  helpOffered.includes(opt)
-                    ? "border-primary/40 bg-accent text-accent-foreground"
-                    : "border-border bg-card text-muted-foreground hover:text-foreground"
-                }`}
+                data-active={helpOffered.includes(opt) ? "true" : "false"}
+                className="filter-chip"
               >
                 {opt}
               </button>
@@ -273,13 +269,13 @@ export function SignupForm() {
           <button
             type="submit"
             disabled={status.type === "submitting"}
-            className="inline-flex h-12 flex-1 items-center justify-center rounded-full bg-primary px-7 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:shadow-xl hover:shadow-primary/30 hover:brightness-110 disabled:opacity-50 active:scale-[0.98]"
+            className="focus-ring inline-flex h-12 flex-1 items-center justify-center rounded-full bg-primary px-7 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:shadow-xl hover:shadow-primary/30 hover:brightness-110 disabled:opacity-50 active:scale-[0.98]"
           >
             {status.type === "submitting" ? "Joining..." : "Join Event"}
           </button>
           <Link
             href="/room"
-            className="inline-flex h-12 items-center justify-center rounded-full border border-border bg-card px-7 text-sm font-semibold text-card-foreground transition-all hover:bg-secondary active:scale-[0.98]"
+            className="focus-ring inline-flex h-12 items-center justify-center rounded-full border border-border bg-card px-7 text-sm font-semibold text-card-foreground transition-all hover:bg-secondary active:scale-[0.98]"
           >
             View Directory
           </Link>

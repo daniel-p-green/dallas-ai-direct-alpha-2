@@ -208,6 +208,7 @@ export function RoomBoard() {
 
       {/* Search */}
       <div className="relative mb-4">
+        <label htmlFor="attendee-search" className="sr-only">Search attendees</label>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"
@@ -225,25 +226,24 @@ export function RoomBoard() {
           <path d="m21 21-4.3-4.3" />
         </svg>
         <input
+          id="attendee-search"
           type="search"
           placeholder="Search by name, title, or company..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="h-12 w-full rounded-2xl border border-border bg-card pl-11 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring transition-colors"
+          className="form-input pl-11"
         />
       </div>
 
       {/* Filter chips */}
-      <div className="mb-6 flex gap-2 overflow-x-auto pb-1">
+      <div className="mb-6 flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Filter by help type">
         {ALL_FILTERS.map((filter) => (
           <button
             key={filter}
             onClick={() => setActiveFilter(filter)}
-            className={`shrink-0 rounded-full border px-4 py-2 text-[13px] font-medium transition-all active:scale-95 ${
-              activeFilter === filter
-                ? "border-primary/40 bg-accent text-accent-foreground"
-                : "border-border bg-card text-muted-foreground hover:text-foreground"
-            }`}
+            aria-pressed={activeFilter === filter}
+            data-active={activeFilter === filter ? "true" : "false"}
+            className="filter-chip"
           >
             {filter}
           </button>

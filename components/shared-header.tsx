@@ -23,7 +23,7 @@ export function SharedHeader() {
         <nav className="flex items-center gap-1">
           <Link
             href="/signup"
-            className={`rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors ${
+            className={`focus-ring rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors ${
               pathname === "/signup"
                 ? "bg-secondary text-foreground"
                 : "text-muted-foreground hover:text-foreground"
@@ -33,7 +33,7 @@ export function SharedHeader() {
           </Link>
           <Link
             href="/room"
-            className={`rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors ${
+            className={`focus-ring rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors ${
               pathname === "/room"
                 ? "bg-secondary text-foreground"
                 : "text-muted-foreground hover:text-foreground"

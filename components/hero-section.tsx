@@ -27,13 +27,13 @@ export function HeroSection() {
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
         <Link
           href="/signup"
-          className="inline-flex h-12 items-center justify-center rounded-full bg-primary px-7 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:shadow-xl hover:shadow-primary/30 hover:brightness-110 active:scale-[0.98]"
+          className="focus-ring inline-flex h-12 items-center justify-center rounded-full bg-primary px-7 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:shadow-xl hover:shadow-primary/30 hover:brightness-110 active:scale-[0.98]"
         >
           Join the Event
         </Link>
         <Link
           href="/room"
-          className="inline-flex h-12 items-center justify-center rounded-full border border-border bg-card px-7 text-sm font-semibold text-card-foreground transition-all hover:bg-secondary active:scale-[0.98]"
+          className="focus-ring inline-flex h-12 items-center justify-center rounded-full border border-border bg-card px-7 text-sm font-semibold text-card-foreground transition-all hover:bg-secondary active:scale-[0.98]"
         >
           View Directory
         </Link>

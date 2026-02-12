@@ -30,23 +30,23 @@
 
   .dark {
     --background: 240 6% 6%;
-    --foreground: 0 0% 96%;
+    --foreground: 0 0% 98%;
     --card: 240 4% 10%;
-    --card-foreground: 0 0% 96%;
+    --card-foreground: 0 0% 98%;
     --popover: 240 4% 10%;
-    --popover-foreground: 0 0% 96%;
+    --popover-foreground: 0 0% 98%;
     --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 240 4% 14%;
+    --secondary: 240 4% 16%;
     --secondary-foreground: 0 0% 93%;
-    --muted: 240 4% 14%;
-    --muted-foreground: 0 0% 50%;
+    --muted: 240 4% 16%;
+    --muted-foreground: 0 0% 64%;
     --accent: 217 91% 15%;
-    --accent-foreground: 217 91% 70%;
+    --accent-foreground: 217 80% 76%;
     --destructive: 0 62% 55%;
     --destructive-foreground: 0 0% 100%;
-    --border: 240 4% 16%;
-    --input: 240 4% 16%;
+    --border: 240 4% 18%;
+    --input: 240 4% 18%;
     --ring: 217 91% 60%;
     --success: 152 69% 46%;
     --success-foreground: 0 0% 100%;
@@ -62,9 +62,20 @@
   }
 }
 
-/* Filter chip active state */
+/* Focus-visible ring for keyboard accessibility */
+.focus-ring {
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+}
+
+/* Filter chip states */
+.filter-chip {
+  @apply focus-ring shrink-0 rounded-full border px-4 py-2 text-[13px] font-medium transition-all active:scale-95;
+}
+.filter-chip[data-active="false"] {
+  @apply border-border bg-card text-secondary-foreground hover:bg-secondary hover:text-foreground;
+}
 .filter-chip[data-active="true"] {
-  @apply border-primary/40 bg-accent text-accent-foreground;
+  @apply border-primary bg-primary text-primary-foreground;
 }
 
 /* Attendee card entrance */
@@ -100,7 +111,7 @@
 
 /* Form inputs */
 .form-input {
-  @apply h-12 w-full rounded-2xl border border-border bg-card px-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring transition-colors;
+  @apply h-12 w-full rounded-2xl border border-border bg-card px-4 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background;
 }
 
 /* Comfort level bar segments */
