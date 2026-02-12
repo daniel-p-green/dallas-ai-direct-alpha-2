@@ -23,17 +23,18 @@ or email exposure risk.
 
 1. System stores required fields: `name`, `email`.
 2. System stores optional fields: `linkedin_url`, `title`, `company`.
-3. System stores required structured fields:
+3. System requires explicit attendee consent before displaying optional `title` or `company` on public surfaces.
+4. System stores required structured fields:
    - `ai_comfort_level` as integer `1..5`
    - `help_needed` as `text[]`
    - `help_offered` as `text[]`
-4. System stores optional free-text fields:
+5. System stores optional free-text fields:
    - `other_help_needed`
    - `other_help_offered`
-5. System treats `email` as sensitive.
-6. Public UI reads from `attendees_public` only.
-7. Insert path writes to `attendees`.
-8. System displays aggregate metrics without private fields.
+6. System treats `email` as sensitive.
+7. Public UI reads from `attendees_public` only.
+8. Insert path writes to `attendees`.
+9. System displays aggregate metrics without private fields.
 
 ## Non-functional requirements
 
