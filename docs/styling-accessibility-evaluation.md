@@ -57,5 +57,5 @@ Recommended fix (minimal):
 
 ## Go/No-Go recommendation
 
-- Go for demo if hydration warning is accepted as known issue.
-- Preferred: apply small hydration fix before final rehearsal to eliminate console noise.
+- Go for demo when the team accepts the hydration warning as a documented known issue.
+- Prefer a small hydration fix before final rehearsal to eliminate console noise and reduce operator ambiguity.
