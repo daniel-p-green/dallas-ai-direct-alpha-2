@@ -26,6 +26,7 @@ test('each pattern includes required content and privacy-first constraints', () 
   assert.match(content, /QR Signup Card[\s\S]*### Required Content[\s\S]*### Do \/ Don't[\s\S]*Don't render submitted email/i);
   assert.match(content, /Public Room Board[\s\S]*### Required Content[\s\S]*Dallas AI logo lockup[\s\S]*### Do \/ Don't[\s\S]*Don't include private identifiers, including email/i);
   assert.match(content, /Privacy Notice Row[\s\S]*### Required Content[\s\S]*Email stays private and is never displayed publicly on the room board\./i);
+  assert.match(content, /Public Room Board[\s\S]*### Layout and Visual Spec[\s\S]*Card behavior \| Default `--shadow-card-sm`, hover `--shadow-card-hover`/i);
 });
 
 test('doc maintains enterprise active-voice guardrails with no endorsement claims', () => {
