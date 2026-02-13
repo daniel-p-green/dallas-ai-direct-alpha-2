@@ -17,7 +17,7 @@ export async function GET() {
   if (!hasNeonDatabaseEnv()) {
     return NextResponse.json(
       {
-        message: 'Showing demo seed data. Configure NEON_DATABASE_URL on the server for live room data.',
+        message: 'Showing demo seed data. Configure DATABASE_URL on the server for live room data.',
         rows: []
       },
       { status: 503 }
