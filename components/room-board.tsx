@@ -1,10 +1,6 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import {
-  getSupabaseBrowserClient,
-  hasSupabaseBrowserEnv,
-} from "@/lib/supabase/browser"
 import { AttendeeCard, type Attendee } from "@/components/attendee-card"
 import { MetricsStrip } from "@/components/metrics-strip"
 
@@ -88,9 +84,7 @@ export function RoomBoard() {
   )
 
   const [attendees, setAttendees] = useState<Attendee[]>(fallback)
-  const [dataMode, setDataMode] = useState<"live" | "seed">(
-    hasSupabaseBrowserEnv() ? "live" : "seed"
-  )
+  const [dataMode, setDataMode] = useState<"live" | "seed">("seed")
   const [notice, setNotice] = useState<string | null>(null)
   const [ready, setReady] = useState(false)
   const [search, setSearch] = useState("")
@@ -114,40 +108,25 @@ export function RoomBoard() {
     return list
   }, [attendees, filter, search])
 
-  /* ---- Polling ---- */
+  /* ---- Polling via API route ---- */
   useEffect(() => {
     let active = true
 
     async function load() {
-      if (!hasSupabaseBrowserEnv()) {
-        if (active) {
-          setDataMode("seed")
-          setNotice("Showing sample data. Connect Supabase to see live attendees.")
-          setAttendees(fallback)
-        }
-        return
-      }
-
       try {
-        const supabase = getSupabaseBrowserClient()
-        const { data, error } = await supabase
-          .from("attendees_public")
-          .select(
-            "name,title,company,linkedin_url,ai_comfort_level,help_offered,created_at"
-          )
-          .order("created_at", { ascending: false })
-          .limit(200)
+        const res = await fetch("/api/attendees")
+        const json = await res.json()
 
-        if (error) {
+        if (json.error === "not_configured" || !json.data) {
           if (active) {
             setDataMode("seed")
-            setNotice("Live data unavailable. Showing sample data.")
+            setNotice("Showing sample data. Connect the database to see live attendees.")
             setAttendees(fallback)
           }
           return
         }
 
-        const mapped: Attendee[] = (data ?? []).map((row) => ({
+        const mapped: Attendee[] = (json.data as Record<string, unknown>[]).map((row) => ({
           name:
             typeof row.name === "string" && row.name.trim().length > 0
               ? row.name
@@ -162,7 +141,7 @@ export function RoomBoard() {
               : 1,
           help_offered: Array.isArray(row.help_offered)
             ? row.help_offered.filter(
-                (v): v is string => typeof v === "string"
+                (v: unknown): v is string => typeof v === "string"
               )
             : [],
           created_at:
@@ -172,9 +151,15 @@ export function RoomBoard() {
         }))
 
         if (active) {
-          setDataMode("live")
-          setNotice(null)
-          setAttendees(mapped)
+          if (mapped.length > 0) {
+            setDataMode("live")
+            setNotice(null)
+            setAttendees(mapped)
+          } else {
+            setDataMode("live")
+            setNotice(null)
+            setAttendees([])
+          }
         }
       } catch {
         if (active) {

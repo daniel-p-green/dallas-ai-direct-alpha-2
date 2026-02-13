@@ -2,10 +2,6 @@
 
 import Link from "next/link"
 import { type FormEvent, useState } from "react"
-import {
-  getSupabaseBrowserClient,
-  hasSupabaseBrowserEnv,
-} from "@/lib/supabase/browser"
 
 const HELP_OPTIONS = [
   "Hiring",
@@ -48,14 +44,6 @@ export function SignupForm() {
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
-    if (!hasSupabaseBrowserEnv()) {
-      setStatus({
-        type: "error",
-        message: "Signup is temporarily unavailable. Environment not configured.",
-      })
-      return
-    }
-
     const fd = new FormData(e.currentTarget)
 
     /* Honeypot */
@@ -80,23 +68,22 @@ export function SignupForm() {
       help_needed: helpNeeded,
       help_offered: helpOffered,
       honeypot: "",
-      other_help_needed: null,
-      other_help_offered: null,
     }
 
     setStatus({ type: "submitting" })
 
     try {
-      const supabase = getSupabaseBrowserClient()
-      const { error } = await supabase.from("attendees").insert(payload)
+      const res = await fetch("/api/attendees", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+      const json = await res.json()
 
-      if (error) {
+      if (!res.ok) {
         setStatus({
           type: "error",
-          message:
-            error.code === "23505"
-              ? "This email has already been used to sign up."
-              : "Something went wrong. Please try again.",
+          message: json.error || "Something went wrong. Please try again.",
         })
         return
       }
