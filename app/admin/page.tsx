@@ -1,13 +1,33 @@
 export default function AdminPage() {
   return (
-    <section className="pageCard stack">
-      <h2 className="pageTitle">Demo controls (UI only)</h2>
-      <p className="muted">Use this panel to rehearse fallback paths without privileged backend actions.</p>
-      <div className="ctaRow">
-        <button className="buttonSecondary" type="button">Demo mode: on</button>
-        <button className="buttonSecondary" type="button">Seed dataset: off</button>
-        <button className="buttonSecondary" type="button">Polling: 5s</button>
+    <div className="rounded-xl border border-border bg-card p-6">
+      <h2 className="text-2xl font-bold tracking-tight">
+        Demo Controls
+      </h2>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Use this panel to rehearse fallback paths without privileged backend
+        actions.
+      </p>
+      <div className="mt-5 flex flex-wrap gap-3">
+        <button
+          type="button"
+          className="inline-flex min-h-[44px] items-center justify-center rounded-[var(--radius)] border border-border bg-card px-4 text-sm font-semibold text-card-foreground"
+        >
+          Demo mode: on
+        </button>
+        <button
+          type="button"
+          className="inline-flex min-h-[44px] items-center justify-center rounded-[var(--radius)] border border-border bg-card px-4 text-sm font-semibold text-card-foreground"
+        >
+          Seed dataset: off
+        </button>
+        <button
+          type="button"
+          className="inline-flex min-h-[44px] items-center justify-center rounded-[var(--radius)] border border-border bg-card px-4 text-sm font-semibold text-card-foreground"
+        >
+          Polling: 5s
+        </button>
       </div>
-    </section>
-  );
+    </div>
+  )
 }
