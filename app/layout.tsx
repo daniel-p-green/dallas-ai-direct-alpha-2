@@ -9,7 +9,7 @@ import "./globals.css"
 export const metadata: Metadata = {
   title: "Dallas AI Direct",
   description:
-    "See who is in the room. Real-time attendee directory for Dallas AI events.",
+    "Connecting 10,000+ minds building the future of AI in Dallas. The live directory for Dallas AI events.",
 }
 
 export const viewport: Viewport = {
