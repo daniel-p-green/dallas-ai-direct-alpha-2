@@ -1,3 +1,4 @@
+import crypto from "crypto"
 import { cookies } from "next/headers"
 import { getDb } from "@/lib/db"
 import bcrypt from "bcryptjs"
@@ -61,11 +62,7 @@ export function createSessionToken(user: AdminUser): string {
 }
 
 function sign(data: string): string {
-  const crypto = require("crypto")
-  return crypto
-    .createHmac("sha256", getSecret())
-    .update(data)
-    .digest("hex")
+  return crypto.createHmac("sha256", getSecret()).update(data).digest("hex")
 }
 
 export function parseSessionToken(token: string): AdminUser | null {
