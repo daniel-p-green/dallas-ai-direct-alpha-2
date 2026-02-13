@@ -1,5 +1,6 @@
 "use client";
 
+import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 
 type Attendee = {
@@ -31,21 +32,9 @@ const seed: Attendee[] = [
   }
 ];
 
-/** Inline LinkedIn icon – avoids @geist-ui/icons dependency */
-function LinkedinIcon({ size = 15 }: { size?: number }) {
+function LinkedinIcon({ size = 16 }: { size?: number }) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
       <rect x="2" y="9" width="4" height="12" />
       <circle cx="4" cy="4" r="2" />
@@ -59,8 +48,18 @@ function ComfortDots({ level }: { level: number }) {
       {[1, 2, 3, 4, 5].map((v) => (
         <span key={v} className={`dot ${v <= level ? 'active' : ''}`} data-level={String(v)} />
       ))}
-      <span>{level}</span>
+      <span className="comfortLabel">{level}</span>
     </span>
+  );
+}
+
+function EmptyState() {
+  return (
+    <div className="emptyState">
+      <h3>No Attendees Yet</h3>
+      <p>Be the first to join the room. Scan the QR code or click below to sign up.</p>
+      <Link className="button" href="/signup">Join via QR</Link>
+    </div>
   );
 }
 
@@ -73,13 +72,14 @@ export default function RoomPage() {
   const [dataMode, setDataMode] = useState<'live' | 'fallback'>('fallback');
   const [loadMessage, setLoadMessage] = useState<string | null>(null);
   const [lastPollAt, setLastPollAt] = useState(Date.now());
-  // Track whether client has mounted to avoid hydration mismatch on time-dependent rendering
   const [mounted, setMounted] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     let isActive = true;
 
     const loadAttendees = async () => {
+      if (isActive) setIsRefreshing(true);
       try {
         const response = await fetch('/api/attendees-public', { cache: 'no-store' });
         const responseBody = (await response.json().catch(() => null)) as
@@ -110,9 +110,9 @@ export default function RoomPage() {
         }));
 
         if (isActive) {
-          setDataMode('live');
+          setDataMode(mapped.length > 0 || rows.length === 0 ? 'live' : 'fallback');
           setLoadMessage(null);
-          setAttendees(mapped);
+          setAttendees(mapped.length > 0 ? mapped : fallbackAttendees);
           setLastPollAt(Date.now());
         }
       } catch {
@@ -122,6 +122,8 @@ export default function RoomPage() {
           setAttendees(fallbackAttendees);
           setLastPollAt(Date.now());
         }
+      } finally {
+        if (isActive) setIsRefreshing(false);
       }
     };
 
@@ -134,34 +136,47 @@ export default function RoomPage() {
     };
   }, [fallbackAttendees]);
 
-  const updatedAgo = Math.max(1, Math.floor((Date.now() - lastPollAt) / 1000));
   const attendeeCount = attendees.length;
   const avgComfort =
     attendeeCount > 0 ? (attendees.reduce((n, a) => n + a.ai_comfort_level, 0) / attendeeCount).toFixed(1) : '0.0';
   const highPct =
     attendeeCount > 0 ? Math.round((attendees.filter((a) => a.ai_comfort_level >= 4).length / attendeeCount) * 100) : 0;
 
+  const formatUpdated = () => {
+    if (!mounted) return 'Loading...';
+    const seconds = Math.max(1, Math.floor((Date.now() - lastPollAt) / 1000));
+    return `Updated ${seconds}s ago`;
+  };
+
   return (
     <section className="pageCard stack">
       <div className="roomHeader">
         <div>
-          <h2 className="pageTitle" style={{ marginBottom: 4 }}>Who is in the room?</h2>
-          <span className="badge">Public view – emails excluded</span>
+          <h2 className="pageTitle" style={{ marginBottom: 4 }}>Who Is in the Room?</h2>
+          <span className="badge">Public view - emails excluded</span>
         </div>
-        <span className="updatedAt">Updated {updatedAgo}s ago</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+          {isRefreshing && (
+            <span className="statusDot live" style={{ animation: 'none' }} aria-label="Refreshing data" />
+          )}
+          <span className="updatedAt">{formatUpdated()}</span>
+        </div>
       </div>
-      <p className="muted" style={{ marginTop: -8 }}>
-        Data mode: {dataMode === 'live' ? 'Live attendees_public feed' : 'Fallback demo seed data'}
-      </p>
-      {loadMessage ? <p className="helper">{loadMessage}</p> : null}
+
+      <div className="dataModeBanner" aria-live="polite">
+        <span className={`statusDot ${dataMode === 'live' ? 'live' : 'fallback'}`} />
+        {dataMode === 'live' ? 'Live attendees_public feed' : 'Fallback demo seed data'}
+      </div>
+
+      {loadMessage && <p className="helper">{loadMessage}</p>}
 
       <div className="metrics">
         <div className="metricCard">
-          <p className="metricLabel">Total attendees</p>
+          <p className="metricLabel">Total Attendees</p>
           <p className="metricValue">{attendeeCount}</p>
         </div>
         <div className="metricCard">
-          <p className="metricLabel">Average comfort</p>
+          <p className="metricLabel">Average Comfort</p>
           <p className="metricValue">{avgComfort}</p>
         </div>
         <div className="metricCard">
@@ -170,31 +185,48 @@ export default function RoomPage() {
         </div>
       </div>
 
-      <div className="attendeeList">
-        {attendees.map((a) => {
-          // Only compute justJoined after mount to avoid server/client hydration mismatch
-          const justJoined = mounted && Date.now() - new Date(a.created_at).getTime() <= 5000;
-          return (
-            <article key={`${a.name}-${a.created_at}`} className={`attendeeRow ${justJoined ? 'justJoined' : ''}`}>
-              <div className="nameBlock">
-                <strong>{a.name}</strong>
-                <span>{[a.title, a.company].filter(Boolean).join(' · ') || 'Profile private'}</span>
-              </div>
-              <ComfortDots level={a.ai_comfort_level} />
-              <span className="muted">{a.help_offered.join(', ')}</span>
-              <a
-                className="iconButton"
-                href={a.linkedin_url || '#'}
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Open LinkedIn profile"
-              >
-                <LinkedinIcon size={15} />
-              </a>
-            </article>
-          );
-        })}
-      </div>
+      {attendees.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <div className="attendeeList">
+          {attendees.map((a) => {
+            const justJoined = mounted && Date.now() - new Date(a.created_at).getTime() <= 5000;
+            return (
+              <article key={`${a.name}-${a.created_at}`} className={`attendeeRow ${justJoined ? 'justJoined' : ''}`}>
+                <div className="nameBlock">
+                  <strong>{a.name}</strong>
+                  <span>{[a.title, a.company].filter(Boolean).join(' at ') || 'Profile private'}</span>
+                </div>
+                <ComfortDots level={a.ai_comfort_level} />
+                <div className="chipList">
+                  {a.help_offered.length > 0 ? (
+                    a.help_offered.map((h) => (
+                      <span key={h} className="chip">{h}</span>
+                    ))
+                  ) : (
+                    <span className="muted" style={{ fontSize: 13 }}>--</span>
+                  )}
+                </div>
+                {a.linkedin_url ? (
+                  <a
+                    className="iconButton"
+                    href={a.linkedin_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`Open ${a.name} LinkedIn profile`}
+                  >
+                    <LinkedinIcon size={16} />
+                  </a>
+                ) : (
+                  <span className="iconButton" style={{ opacity: 0.3, cursor: 'default' }} aria-hidden="true">
+                    <LinkedinIcon size={16} />
+                  </span>
+                )}
+              </article>
+            );
+          })}
+        </div>
+      )}
     </section>
   );
 }

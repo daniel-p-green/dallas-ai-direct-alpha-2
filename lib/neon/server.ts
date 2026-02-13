@@ -19,28 +19,29 @@ function createClient(connectionString: string): SqlClient {
   });
 }
 
-function requireEnv(name: 'NEON_DATABASE_URL'): string {
-  const value = process.env[name];
+function getDatabaseUrl(): string {
+  // Support both the Neon integration env var (DATABASE_URL) and the legacy app env var (NEON_DATABASE_URL)
+  const value = process.env.DATABASE_URL ?? process.env.NEON_DATABASE_URL;
   if (!value) {
-    throw new Error(`${name} is not configured.`);
+    throw new Error('DATABASE_URL (or NEON_DATABASE_URL) is not configured.');
   }
   return value;
 }
 
 export function hasNeonDatabaseEnv() {
-  return Boolean(process.env.NEON_DATABASE_URL);
+  return Boolean(process.env.DATABASE_URL ?? process.env.NEON_DATABASE_URL);
 }
 
 export function getNeonWriteClient() {
   if (!globalThis.__dallasNeonWriteClient) {
-    globalThis.__dallasNeonWriteClient = createClient(requireEnv('NEON_DATABASE_URL'));
+    globalThis.__dallasNeonWriteClient = createClient(getDatabaseUrl());
   }
   return globalThis.__dallasNeonWriteClient;
 }
 
 export function getNeonReadClient() {
   if (!globalThis.__dallasNeonReadClient) {
-    const connectionString = process.env.NEON_DATABASE_URL_READONLY ?? requireEnv('NEON_DATABASE_URL');
+    const connectionString = process.env.DATABASE_URL_READONLY ?? getDatabaseUrl();
     globalThis.__dallasNeonReadClient = createClient(connectionString);
   }
   return globalThis.__dallasNeonReadClient;
