@@ -244,7 +244,31 @@ export default function AdminPage() {
           )}
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-border">
+        {/* Mobile: card layout */}
+        <div className="flex flex-col gap-3 md:hidden">
+          <div className="flex items-center gap-2 px-1">
+            <input
+              type="checkbox"
+              checked={selected.size === filtered.length && filtered.length > 0}
+              onChange={toggleSelectAll}
+              className="focus-ring rounded"
+              aria-label="Select all attendees"
+            />
+            <span className="text-xs text-muted-foreground">Select all</span>
+          </div>
+          {filtered.map((a) => (
+            <MobileAttendeeCard
+              key={a.id}
+              attendee={a}
+              selected={selected.has(a.id)}
+              onToggleSelect={() => toggleSelect(a.id)}
+              onDelete={() => handleDelete([a.id])}
+            />
+          ))}
+        </div>
+
+        {/* Desktop: table layout */}
+        <div className="hidden overflow-x-auto rounded-2xl border border-border md:block">
           <table className="w-full text-left text-[13px]">
             <thead>
               <tr className="border-b border-border bg-card text-xs text-muted-foreground">
@@ -259,8 +283,8 @@ export default function AdminPage() {
                 </th>
                 <th className="px-3 py-3 font-medium">Name</th>
                 <th className="px-3 py-3 font-medium">Email</th>
-                <th className="hidden px-3 py-3 font-medium md:table-cell">Title / Company</th>
-                <th className="hidden px-3 py-3 font-medium sm:table-cell">Comfort</th>
+                <th className="px-3 py-3 font-medium">Title / Company</th>
+                <th className="px-3 py-3 font-medium">Comfort</th>
                 <th className="hidden px-3 py-3 font-medium lg:table-cell">Joined</th>
                 <th className="px-3 py-3 font-medium">Actions</th>
               </tr>
@@ -380,7 +404,7 @@ function AttendeeRow({
           <span className="text-muted-foreground">{a.email}</span>
         )}
       </td>
-      <td className="hidden px-3 py-3 md:table-cell">
+      <td className="px-3 py-3">
         {editing ? (
           <div className="flex gap-1">
             <input
@@ -402,7 +426,7 @@ function AttendeeRow({
           </span>
         )}
       </td>
-      <td className="hidden px-3 py-3 sm:table-cell">
+      <td className="px-3 py-3">
         <span className="tabular-nums">{a.ai_comfort_level}/5</span>
       </td>
       <td className="hidden px-3 py-3 lg:table-cell">
@@ -451,5 +475,72 @@ function AttendeeRow({
         </div>
       </td>
     </tr>
+  )
+}
+
+function MobileAttendeeCard({
+  attendee: a,
+  selected,
+  onToggleSelect,
+  onDelete,
+}: {
+  attendee: AdminAttendee
+  selected: boolean
+  onToggleSelect: () => void
+  onDelete: () => void
+}) {
+  const isSpam = a.honeypot && a.honeypot.length > 0
+  const joinDate = new Date(a.created_at).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  })
+
+  return (
+    <div
+      className={`rounded-2xl border bg-card p-4 ${
+        selected ? "border-primary/40 bg-primary/5" : "border-border"
+      } ${isSpam ? "opacity-50" : ""}`}
+    >
+      <div className="flex items-start gap-3">
+        <input
+          type="checkbox"
+          checked={selected}
+          onChange={onToggleSelect}
+          className="focus-ring mt-1 rounded"
+          aria-label={`Select ${a.name}`}
+        />
+        <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+          <div className="flex items-center gap-2">
+            <span className="truncate text-sm font-semibold">{a.name}</span>
+            {isSpam && (
+              <span className="shrink-0 rounded-full bg-destructive/10 px-2 py-0.5 text-[10px] font-medium text-destructive">
+                SPAM
+              </span>
+            )}
+          </div>
+          <span className="truncate text-xs text-muted-foreground">{a.email}</span>
+          {(a.title || a.company) && (
+            <span className="truncate text-xs text-muted-foreground">
+              {[a.title, a.company].filter(Boolean).join(" at ")}
+            </span>
+          )}
+          <div className="flex items-center gap-3 pt-1">
+            <span className="text-xs tabular-nums text-muted-foreground">
+              Comfort: {a.ai_comfort_level}/5
+            </span>
+            <span className="text-xs text-muted-foreground">{joinDate}</span>
+          </div>
+        </div>
+        <button
+          onClick={onDelete}
+          className="focus-ring shrink-0 rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+          aria-label={`Delete ${a.name}`}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+          </svg>
+        </button>
+      </div>
+    </div>
   )
 }

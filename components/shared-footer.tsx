@@ -3,7 +3,7 @@ import Image from "next/image"
 export function SharedFooter() {
   return (
     <footer className="border-t border-border/60">
-      <div className="mx-auto flex w-full max-w-3xl flex-col items-center gap-5 px-5 py-6 sm:flex-row sm:justify-between">
+      <div className="mx-auto flex w-full max-w-3xl flex-col items-center gap-4 px-5 py-6 sm:flex-row sm:justify-between">
         <div className="flex items-center gap-3 text-xs text-muted-foreground">
           <Image
             src="/brand/dallas-ai-logo-white.png"
