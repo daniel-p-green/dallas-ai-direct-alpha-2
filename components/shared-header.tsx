@@ -3,9 +3,18 @@
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useEffect, useState } from "react"
 
 export function SharedHeader() {
   const pathname = usePathname()
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  useEffect(() => {
+    fetch("/api/auth/session")
+      .then((r) => r.json())
+      .then((json) => setIsAdmin(!!json.user))
+      .catch(() => setIsAdmin(false))
+  }, [])
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
@@ -35,6 +44,11 @@ export function SharedHeader() {
           <NavLink href="/room" active={pathname === "/room"}>
             Directory
           </NavLink>
+          {isAdmin && (
+            <NavLink href="/admin" active={pathname === "/admin"}>
+              Admin
+            </NavLink>
+          )}
           <a
             href="https://dallas-ai.org/"
             target="_blank"
