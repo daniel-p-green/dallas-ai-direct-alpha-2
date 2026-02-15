@@ -91,7 +91,7 @@ export function AttendeeCard({
 
       {/* Help tags */}
       {attendee.help_offered.length > 0 && (
-        <div className="mt-3 flex flex-wrap gap-1.5 pl-[58px]">
+        <div className="mt-3 flex flex-wrap gap-1.5 pl-0 sm:pl-[58px]">
           {attendee.help_offered.map((tag) => (
             <span
               key={tag}

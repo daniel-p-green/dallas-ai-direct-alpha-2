@@ -49,10 +49,10 @@ export function HeroSection() {
         ].map((item) => (
           <div
             key={item.term}
-            className="flex flex-col items-center gap-1 bg-card px-3 py-4"
+            className="flex flex-col items-center gap-1 bg-card px-2 py-4 sm:px-3"
           >
-            <dt className="text-xs font-semibold">{item.term}</dt>
-            <dd className="text-[11px] text-muted-foreground">{item.def}</dd>
+            <dt className="text-[11px] font-semibold sm:text-xs">{item.term}</dt>
+            <dd className="text-center text-[10px] text-muted-foreground sm:text-[11px]">{item.def}</dd>
           </div>
         ))}
       </dl>
