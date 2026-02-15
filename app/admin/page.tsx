@@ -244,31 +244,32 @@ export default function AdminPage() {
           )}
         </div>
       ) : (
-        {/* Mobile: card layout */}
-        <div className="flex flex-col gap-3 md:hidden">
-          <div className="flex items-center gap-2 px-1">
-            <input
-              type="checkbox"
-              checked={selected.size === filtered.length && filtered.length > 0}
-              onChange={toggleSelectAll}
-              className="focus-ring rounded"
-              aria-label="Select all attendees"
-            />
-            <span className="text-xs text-muted-foreground">Select all</span>
+        <>
+          {/* Mobile: card layout */}
+          <div className="flex flex-col gap-3 md:hidden">
+            <div className="flex items-center gap-2 px-1">
+              <input
+                type="checkbox"
+                checked={selected.size === filtered.length && filtered.length > 0}
+                onChange={toggleSelectAll}
+                className="focus-ring rounded"
+                aria-label="Select all attendees"
+              />
+              <span className="text-xs text-muted-foreground">Select all</span>
+            </div>
+            {filtered.map((a) => (
+              <MobileAttendeeCard
+                key={a.id}
+                attendee={a}
+                selected={selected.has(a.id)}
+                onToggleSelect={() => toggleSelect(a.id)}
+                onDelete={() => handleDelete([a.id])}
+              />
+            ))}
           </div>
-          {filtered.map((a) => (
-            <MobileAttendeeCard
-              key={a.id}
-              attendee={a}
-              selected={selected.has(a.id)}
-              onToggleSelect={() => toggleSelect(a.id)}
-              onDelete={() => handleDelete([a.id])}
-            />
-          ))}
-        </div>
 
-        {/* Desktop: table layout */}
-        <div className="hidden overflow-x-auto rounded-2xl border border-border md:block">
+          {/* Desktop: table layout */}
+          <div className="hidden overflow-x-auto rounded-2xl border border-border md:block">
           <table className="w-full text-left text-[13px]">
             <thead>
               <tr className="border-b border-border bg-card text-xs text-muted-foreground">
@@ -305,7 +306,8 @@ export default function AdminPage() {
               ))}
             </tbody>
           </table>
-        </div>
+          </div>
+        </>
       )}
     </div>
   )
